@@ -1,0 +1,642 @@
+[
+  {
+    "_id": 101,
+    "name": "Wireless Headphones",
+    "description": "High-quality noise-cancelling over-ear headphones with Bluetooth.",
+    "price": 89,
+    "category": "Electronics",
+    "stock": 25,
+    "image": "https://i.ibb.co/93mfcn79/electronic1.jpg"
+  },
+  {
+    "_id": 102,
+    "name": "Smartwatch Pro",
+    "description": "Water-resistant smartwatch with heart-rate tracking and GPS.",
+    "price": 129,
+    "category": "Electronics",
+    "stock": 15,
+    "image": "https://i.ibb.co/SDRzY1WX/electronic2.jpg"
+  },
+  {
+    "_id": 103,
+    "name": "Bluetooth Speaker",
+    "description": "Portable Bluetooth speaker with deep bass and long battery life.",
+    "price": 39,
+    "category": "Electronics",
+    "stock": 50,
+    "image": "https://i.ibb.co/P2cGnBv/bluetooth-speaker.jpg"
+  },
+  {
+    "_id": 104,
+    "name": "4K Monitor",
+    "description": "27-inch 4K UHD monitor with HDR support and adjustable stand.",
+    "price": 299,
+    "category": "Electronics",
+    "stock": 10,
+    "image": "https://i.ibb.co/HfDbWfsK/4k-monitor.jpg"
+  },
+  {
+    "_id": 105,
+    "name": "Wireless Mouse",
+    "description": "Ergonomic wireless mouse with adjustable DPI settings.",
+    "price": 24,
+    "category": "Electronics",
+    "stock": 35,
+    "image": "https://i.ibb.co/cc1sP99Y/Wireless-Mouse.jpg"
+  },
+  {
+    "_id": 106,
+    "name": "Gaming Keyboard",
+    "description": "Mechanical keyboard with RGB backlighting and programmable keys.",
+    "price": 79,
+    "category": "Electronics",
+    "stock": 20,
+    "image": "https://i.ibb.co/rGC7KxBJ/Gaming-Keyboard.jpg"
+  },
+  {
+    "_id": 107,
+    "name": "Noise Cancelling Earbuds",
+    "description": "Compact earbuds with active noise cancellation and clear sound.",
+    "price": 59,
+    "category": "Electronics",
+    "stock": 40,
+    "image": "https://i.ibb.co/VYKLBgnC/Noise-Cancelling-Earbuds.jpg"
+  },
+  {
+    "_id": 108,
+    "name": "Smart Home Hub",
+    "description": "Voice-controlled smart home hub compatible with multiple devices.",
+    "price": 99,
+    "category": "Electronics",
+    "stock": 15,
+    "image": "https://i.ibb.co/Kx4XgjBx/Smart-Home-Hub.jpg"
+  },
+  {
+    "_id": 109,
+    "name": "External Hard Drive",
+    "description": "2TB external hard drive with USB 3.0 connectivity.",
+    "price": 79,
+    "category": "Electronics",
+    "stock": 30,
+    "image": "https://i.ibb.co/G32R0hTt/External-Hard-Drive.jpg"
+  },
+  {
+    "_id": 110,
+    "name": "Action Camera",
+    "description": "Waterproof action camera with 4K v_ideo recording.",
+    "price": 149,
+    "category": "Electronics",
+    "stock": 12,
+    "image": "https://i.ibb.co/vCpxdt7V/Action-Camera.jpg"
+  },
+  {
+    "_id": 201,
+    "name": "Men's Denim Jacket",
+    "description": "Classic blue denim jacket with button front.",
+    "price": 49,
+    "category": "Clothing",
+    "stock": 20,
+    "image": "https://i.ibb.co/pB8TGYQy/clothing3.jpg"
+  },
+  {
+    "_id": 202,
+    "name": "Women's Casual Dress",
+    "description": "Lightweight floral print summer dress.",
+    "price": 34,
+    "category": "Clothing",
+    "stock": 25,
+    "image": "https://i.ibb.co/0jwfXc4V/clothing1.jpg"
+  },
+  {
+    "_id": 203,
+    "name": "Unisex Hoodie",
+    "description": "Soft cotton hoodie with front pocket.",
+    "price": 29,
+    "category": "Clothing",
+    "stock": 30,
+    "image": "https://i.ibb.co/XfTgVcqJ/Unisex-Hoodie.jpg"
+  },
+  {
+    "_id": 204,
+    "name": "Men's Formal Shirt",
+    "description": "Slim-fit white formal shirt with full sleeves.",
+    "price": 27,
+    "category": "Clothing",
+    "stock": 18,
+    "image": "https://i.ibb.co/qYdFsfJb/Men-s-Formal-Shirt.jpg"
+  },
+  {
+    "_id": 205,
+    "name": "Women's Jeans",
+    "description": "High-rise skinny jeans with stretch fabric.",
+    "price": 39,
+    "category": "Clothing",
+    "stock": 22,
+    "image": "https://i.ibb.co/cccrPDqR/Women-s-Jeans.jpg"
+  },
+  {
+    "_id": 206,
+    "name": "Men's T-Shirt",
+    "description": "Cotton crew neck t-shirt in various colors.",
+    "price": 14,
+    "category": "Clothing",
+    "stock": 40,
+    "image": "https://i.ibb.co/n4z99t3/image-from-rawpixel-id-2817523-jpeg.jpg"
+  },
+  {
+    "_id": 207,
+    "name": "Women's Blazer",
+    "description": "Tailored blazer suitable for formal wear.",
+    "price": 59,
+    "category": "Clothing",
+    "stock": 15,
+    "image": "https://i.ibb.co/ycZTYQPw/Women-s-Blazer.jpg"
+  },
+  {
+    "_id": 208,
+    "name": "K_ids' Pajama Set",
+    "description": "Cute and cozy 2-piece pajama set for k_ids.",
+    "price": 19,
+    "category": "Clothing",
+    "stock": 35,
+    "image": "https://i.ibb.co/7xKQkwr3/K-ids-Pajama-Set.jpg"
+  },
+  {
+    "_id": 209,
+    "name": "Men's Shorts",
+    "description": "Comfortable athletic shorts with pockets.",
+    "price": 21,
+    "category": "Clothing",
+    "stock": 27,
+    "image": "https://i.ibb.co/whF9Ljdq/clothing10.jpg"
+  },
+  {
+    "_id": 210,
+    "name": "Women's Tank Top",
+    "description": "Sleeveless stretch tank top for workouts or casual wear.",
+    "price": 12,
+    "category": "Clothing",
+    "stock": 50,
+    "image": "  https://i.ibb.co/9kLqz1Z7/Women-s-Tank-Top.jpg"
+  },
+  {
+    "_id": 301,
+    "name": "Non-Stick Cookware Set",
+    "description": "10-piece set with pots, pans, and l_ids.",
+    "price": 79,
+    "category": "Kitchen",
+    "stock": 20,
+    "image": "https://i.ibb.co/4ZPHzTV3/Non-Stick-Cookware-Set.jpg"
+  },
+  {
+    "_id": 302,
+    "name": "Vacuum Cleaner",
+    "description": "Bagless vacuum with powerful suction and HEPA filter.",
+    "price": 119,
+    "category": "Kitchen",
+    "stock": 10,
+    "image": "https://i.ibb.co/G394LhnB/Vacuum-Cleaner.jpg"
+  },
+  {
+    "_id": 303,
+    "name": "Electric Kettle",
+    "description": "1.7L stainless steel kettle with auto shut-off.",
+    "price": 29,
+    "category": "Kitchen",
+    "stock": 25,
+    "image": "https://i.ibb.co/gMdBJwJs/electric-kettle-or-water-boiler-photo.jpg"
+  },
+  {
+    "_id": 304,
+    "name": "Air Fryer",
+    "description": "Oil-less fryer for healthier cooking.",
+    "price": 89,
+    "category": "Kitchen",
+    "stock": 15,
+    "image": "https://i.ibb.co/vCjs0VnJ/Wall-Clock.jpg"
+  },
+  {
+    "_id": 305,
+    "name": "Microwave Oven",
+    "description": "700W compact microwave with digital controls.",
+    "price": 99,
+    "category": "Kitchen",
+    "stock": 12,
+    "image": "https://i.ibb.co/vCjs0VnJ/Wall-Clock.jpg"
+  },
+  {
+    "_id": 306,
+    "name": "Bed Sheet Set",
+    "description": "4-piece microfiber bed sheet set, king size.",
+    "price": 49,
+    "category": "Kitchen",
+    "stock": 22,
+    "image": "https://i.ibb.co/CKrhh3cZ/Bed-Sheet-Set.jpg"
+  },
+  {
+    "_id": 307,
+    "name": "Blender",
+    "description": "High-speed blender for smoothies and shakes.",
+    "price": 59,
+    "category": "Kitchen",
+    "stock": 18,
+    "image": "https://i.ibb.co/7xYP4c5M/Blender.jpg"
+  },
+  {
+    "_id": 308,
+    "name": "Ceramic Dinnerware Set",
+    "description": "16-piece set includes plates, bowls, and mugs.",
+    "price": 69,
+    "category": "Kitchen",
+    "stock": 14,
+    "image": "https://i.ibb.co/ZpFLfdxs/Ceramic-Dinnerware-Set.jpg"
+  },
+  {
+    "_id": 309,
+    "name": "Toaster",
+    "description": "2-slice toaster with browning control.",
+    "price": 24,
+    "category": "Kitchen",
+    "stock": 35,
+    "image": "/images/toaster.jpg"
+  },
+  {
+    "_id": 310,
+    "name": "Wall Clock",
+    "description": "Modern design wall clock with silent movement.",
+    "price": 19,
+    "category": "Kitchen",
+    "stock": 40,
+    "image": "https://i.ibb.co/vCjs0VnJ/Wall-Clock.jpg"
+  },
+  {
+    "_id": 31,
+    "category": "Beauty",
+    "name": "Moisturizing Cream",
+    "description": "Hydrating face cream for all skin types.",
+    "price": 15,
+    "image": "https://i.ibb.co/4gd9PDWq/H08cd12d94d9c46c6980b62abee43dea3-K-jpg-720x720q50.jpg"
+  },
+  {
+    "_id": 32,
+    "category": "Beauty",
+    "name": "Lipstick Set",
+    "description": "Long-lasting matte lipstick in 5 colors.",
+    "price": 22.50,
+    "image": "https://example.com/products/beauty/lipstick.jpg"
+  },
+  {
+    "_id": 33,
+    "category": "Beauty",
+    "name": "Facial Cleanser",
+    "description": "Gentle foaming cleanser for daily use.",
+    "price": 12,
+    "image": "https://example.com/products/beauty/cleanser.jpg"
+  },
+  {
+    "_id": 34,
+    "category": "Beauty",
+    "name": "Makeup Brush Set",
+    "description": "10-piece professional makeup brush kit.",
+    "price": 18.75,
+    "image": "https://example.com/products/beauty/brushset.jpg"
+  },
+  {
+    "_id": 35,
+    "category": "Beauty",
+    "name": "Nail Polish Kit",
+    "description": "Vibrant nail polish colors with top coat.",
+    "price": 14,
+    "image": "https://example.com/products/beauty/nailkit.jpg"
+  },
+  {
+    "_id": 36,
+    "category": "Beauty",
+    "name": "Hair Dryer",
+    "description": "Ionic hair dryer with multiple heat settings.",
+    "price": 29,
+    "image": "https://example.com/products/beauty/hairdryer.jpg"
+  },
+  {
+    "_id": 37,
+    "category": "Beauty",
+    "name": "Sunscreen Lotion",
+    "description": "SPF 50 broad spectrum UVA/UVB protection.",
+    "price": 11.49,
+    "image": "https://example.com/products/beauty/sunscreen.jpg"
+  },
+  {
+    "_id": 38,
+    "category": "Beauty",
+    "name": "Perfume Spray",
+    "description": "Fresh floral fragrance for everyday wear.",
+    "price": 24,
+    "image": "https://example.com/products/beauty/perfume.jpg"
+  },
+  {
+    "_id": 39,
+    "category": "Beauty",
+    "name": "Facial Mask Pack",
+    "description": "Pack of 5 revitalizing sheet masks.",
+    "price": 9,
+    "image": "https://example.com/products/beauty/facemask.jpg"
+  },
+  {
+    "_id": 40,
+    "category": "Beauty",
+    "name": "Hair Straightener",
+    "description": "Ceramic flat iron for silky smooth hair.",
+    "price": 34.50,
+    "image": "https://i.ibb.co/4gd9PDWq/H08cd12d94d9c46c6980b62abee43dea3-K-jpg-720x720q50.jpg"
+  },
+  {
+    "_id": 41,
+    "category": "Sports",
+    "name": "Yoga Mat",
+    "description": "Non-slip yoga mat with carrying strap.",
+    "price": 21,
+    "image": "https://i.ibb.co/zHr9JTY5/sport5.jpg"
+  },
+  {
+    "_id": 42,
+    "category": "Sports",
+    "name": "Dumbbell Set",
+    "description": "Adjustable dumbbells with non-slip grip.",
+    "price": 59,
+    "image": "https://i.ibb.co/xtvJTkJ0/banner-Cricket-1.jpg"
+  },
+  {
+    "_id": 43,
+    "category": "Sports",
+    "name": "Jump Rope",
+    "description": "Adjustable speed jump rope for cardio.",
+    "price": 14,
+    "image": "https://i.ibb.co/pvNWKNfY/sport4.jpg"
+  },
+  {
+    "_id": 44,
+    "category": "Sports",
+    "name": "Running Shoes",
+    "description": "Breathable, lightweight running shoes.",
+    "price": 64,
+    "image": "https://i.ibb.co/hR3jqWk7/sport3.jpg"
+  },
+  {
+    "_id": 45,
+    "category": "Sports",
+    "name": "Resistance Bands",
+    "description": "Set of 5 resistance bands for workouts.",
+    "price": 19,
+    "image": "https://i.ibb.co/4nMkC0bs/banner-Sport.jpg"
+  },
+  {
+    "_id": 46,
+    "category": "Sports",
+    "name": "Water Bottle",
+    "description": "1-liter BPA-free sports water bottle.",
+    "price": 12.50,
+    "image": "https://i.ibb.co/KxSCNJNW/sport2.jpg"
+  },
+  {
+    "_id": 47,
+    "category": "Sports",
+    "name": "Bike Helmet",
+    "description": "Adjustable cycling helmet for adults.",
+    "price": 39,
+    "image": "https://i.ibb.co/xtvJTkJ0/banner-Cricket-1.jpg"
+  },
+  {
+    "_id": 48,
+    "category": "Sports",
+    "name": "Sports Backpack",
+    "description": "Water-resistant backpack for gym or travel.",
+    "price": 27,
+    "image": "https://i.ibb.co/KxSCNJNW/sport2.jpg"
+  },
+  {
+    "_id": 49,
+    "category": "Sports",
+    "name": "Tennis Racket",
+    "description": "Lightweight racket with comfortable grip.",
+    "price": 49,
+    "image": "https://i.ibb.co/Q3PsvxWb/sport1.jpg"
+  },
+  {
+    "_id": 50,
+    "category": "Sports",
+    "name": "Basketball",
+    "description": "Official size rubber basketball for outdoor play.",
+    "price": 25,
+    "image": "https://i.ibb.co/4nMkC0bs/banner-Sport.jpg"
+  },
+  {
+    "_id": 51,
+    "category": "Toys",
+    "name": "Building Blocks Set",
+    "description": "Creative building blocks for ages 3+.",
+    "price": 19,
+    "image": "https://i.ibb.co/7xKQkwr3/K-ids-Pajama-Set.jpg"
+  },
+  {
+    "_id": 52,
+    "category": "Toys",
+    "name": "RC Car",
+    "description": "Remote-controlled car with rechargeable battery.",
+    "price": 34,
+    "image": "https://example.com/products/toys/rccar.jpg"
+  },
+  {
+    "_id": 53,
+    "category": "Toys",
+    "name": "Dollhouse Furniture Set",
+    "description": "Mini furniture set for dollhouses.",
+    "price": 22,
+    "image": "https://example.com/products/toys/dollhouse.jpg"
+  },
+  {
+    "_id": 54,
+    "category": "Toys",
+    "name": "Puzzle Game",
+    "description": "100-piece colorful puzzle for k_ids.",
+    "price": 9,
+    "image": "https://example.com/products/toys/puzzle.jpg"
+  },
+  {
+    "_id": 55,
+    "category": "Toys",
+    "name": "Musical Toy Set",
+    "description": "Instruments for toddlers and preschoolers.",
+    "price": 27.50,
+    "image": "https://example.com/products/toys/musicset.jpg"
+  },
+  {
+    "_id": 56,
+    "category": "Toys",
+    "name": "Robot Toy",
+    "description": "Interactive robot with lights and sounds.",
+    "price": 31,
+    "image": "https://example.com/products/toys/robot.jpg"
+  },
+  {
+    "_id": 57,
+    "category": "Toys",
+    "name": "Art Supplies Kit",
+    "description": "Paints, crayons, and markers for k_ids.",
+    "price": 18,
+    "image": "https://example.com/products/toys/artkit.jpg"
+  },
+  {
+    "_id": 58,
+    "category": "Toys",
+    "name": "Stuffed Bear",
+    "description": "Soft plush teddy bear, 12 inches tall.",
+    "price": 14,
+    "image": "https://example.com/products/toys/bear.jpg"
+  },
+  {
+    "_id": 59,
+    "category": "Toys",
+    "name": "Board Game",
+    "description": "Fun family board game for all ages.",
+    "price": 24.00,
+    "image": "https://example.com/products/toys/boardgame.jpg"
+  },
+  {
+    "_id": 60,
+    "category": "Toys",
+    "name": "Bubble Machine",
+    "description": "Automatic bubble blower for outdoor fun.",
+    "price": 16.49,
+    "image": "https://i.ibb.co/7xKQkwr3/K-ids-Pajama-Set.jpg"
+  },
+  {
+    "_id": 1006,
+    "name": "Gaming Keyboard",
+    "description": "Mechanical keyboard with RGB backlighting and programmable keys.",
+    "price": 79,
+    "category": "Popular",
+    "stock": 20,
+    "image": "https://i.ibb.co/rGC7KxBJ/Gaming-Keyboard.jpg"
+  },
+  {
+    "_id": 2008,
+    "name": "K_ids' Pajama Set",
+    "description": "Cute and cozy 2-piece pajama set for k_ids.",
+    "price": 19,
+    "category": "Popular",
+    "stock": 35,
+    "image": "https://i.ibb.co/7xKQkwr3/K-ids-Pajama-Set.jpg"
+  },
+  {
+    "_id": 3007,
+    "name": "Blender",
+    "description": "High-speed blender for smoothies and shakes.",
+    "price": 59,
+    "category": "Popular",
+    "stock": 18,
+    "image": "https://i.ibb.co/7xYP4c5M/Blender.jpg"
+  },
+  {
+    "_id": 4007,
+    "category": "Sports",
+    "name": "Bike Helmet",
+    "description": "STYLE:\nPremium China Polo Design\nSmart Casual & Trendy Look\n\nFABRIC:\nPremium China Fabric\nSmooth, Soft & Comfortable\n\nSLEEVE:\nHalf Sleeve\n\nSIZE:\nM, L, XL, XXL",
+    "price": 39,
+    "image": "https://i.ibb.co/xtvJTkJ0/banner-Cricket-1.jpg"
+  },
+  {
+    "_id": 4008,
+    "category": "Combo",
+    "name": "Men's And Women's Hoodie Combo",
+    "description": "STYLE:\nPremium China Polo Design\nSmart Casual & Trendy Look\n\nFABRIC:\nPremium China Fabric\nSmooth, Soft & Comfortable\n\nSLEEVE:\nHalf Sleeve\n\nSIZE:\nM, L, XL, XXL",
+    "price": 39,
+    "image": "https://i.ibb.co/XfTgVcqJ/Unisex-Hoodie.jpg",
+    "images": [
+      "https://i.ibb.co/XfTgVcqJ/Unisex-Hoodie.jpg",
+      "https://i.ibb.co/7xYP4c5M/Blender.jpg",
+      "https://i.ibb.co/7xKQkwr3/K-ids-Pajama-Set.jpg",
+      "https://i.ibb.co/rGC7KxBJ/Gaming-Keyboard.jpg",
+      "https://i.ibb.co/rGC7KxBJ/Gaming-Keyboard.jpg",
+      "https://i.ibb.co/rGC7KxBJ/Gaming-Keyboard.jpg",
+      "https://i.ibb.co/rGC7KxBJ/Gaming-Keyboard.jpg",
+      "https://i.ibb.co/XfTgVcqJ/Unisex-Hoodie.jpg",
+      "https://i.ibb.co/XfTgVcqJ/Unisex-Hoodie.jpg",
+      "https://i.ibb.co/7xYP4c5M/Blender.jpg",
+      "https://i.ibb.co/7xKQkwr3/K-ids-Pajama-Set.jpg",
+      "https://i.ibb.co/rGC7KxBJ/Gaming-Keyboard.jpg",
+      "https://i.ibb.co/XfTgVcqJ/Unisex-Hoodie.jpg"
+    ]
+  },
+  {
+    "_id": 4009,
+    "category": "ksdfs",
+    "name": "Hoodie Combo",
+    "description": "Adjustable cycling helmet for adults.",
+    "price": 39,
+    "image": "https://i.ibb.co/XfTgVcqJ/Unisex-Hoodie.jpg"
+  },
+  {
+    "_id": 4010,
+    "category": "Exclusive Collection",
+    "name": "Hoodie Combo",
+    "description": "Adjustable cycling helmet for adults.",
+    "price": 39,
+    "image": "https://i.ibb.co/XfTgVcqJ/Unisex-Hoodie.jpg"
+  },
+  {
+    "_id": 4011,
+    "category": "Premium Collection",
+    "name": "Hoodie Combo",
+    "description": "Adjustable cycling helmet for adults.",
+    "price": 39,
+    "image": "https://i.ibb.co/XfTgVcqJ/Unisex-Hoodie.jpg"
+  },
+  {
+    "_id": 4012,
+    "category": "dilam aktadf djeifsodfk",
+    "name": "Hoodie Combo",
+    "description": "Adjustable cycling helmet for adults.",
+    "price": 39,
+    "image": "https://i.ibb.co/XfTgVcqJ/Unisex-Hoodie.jpg"
+  },
+  {
+    "_id": 4013,
+    "category": "sdklfioiwe sdkfoiw ndofi",
+    "name": "Hoodie Combo",
+    "description": "Adjustable cycling helmet for adults.",
+    "price": 39,
+    "image": "https://i.ibb.co/XfTgVcqJ/Unisex-Hoodie.jpg"
+  },
+  {
+    "_id": 4014,
+    "category": "sdklfioiwe sdkfoiw ndofi dfgvedf ",
+    "name": "Hoodie Combo",
+    "description": "Adjustable cycling helmet for adults.",
+    "price": 39,
+    "image": "https://i.ibb.co/XfTgVcqJ/Unisex-Hoodie.jpg"
+  },
+  {
+    "_id": 4015,
+    "category": "sdklfioiw ",
+    "name": "Hoodie Combo",
+    "description": "Adjustable cycling helmet for adults.",
+    "price": 39,
+    "image": "https://i.ibb.co/XfTgVcqJ/Unisex-Hoodie.jpg"
+  },
+  {
+    "_id": 4016,
+    "category": "sdklfioiw sf",
+    "name": "Hoodie Combo",
+    "description": "Adjustable cycling helmet for adults.",
+    "price": 39,
+    "image": "https://i.ibb.co/XfTgVcqJ/Unisex-Hoodie.jpg"
+  },
+  {
+    "_id": 4017,
+    "category": "sdklfioiw evwse",
+    "name": "Hoodie Combo",
+    "description": "Adjustable cycling helmet for adults.",
+    "price": 39,
+    "image": "https://i.ibb.co/XfTgVcqJ/Unisex-Hoodie.jpg"
+  }
+]

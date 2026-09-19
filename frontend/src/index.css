@@ -1,0 +1,374 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.carousel .thumbs-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.carousel .thumbs {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+
+
+:root {
+  --background: #fff;
+  --text: #0a0a0a;
+  --secondary: #1e1e1e;
+}
+
+.dark {
+  --background: #1c1c1d;
+  --text: #f0eeee;
+  --secondary: #e3e3e3;
+}
+
+.image-container {
+  overflow: hidden;
+  position: relative;
+}
+
+.zoom-image {
+  transition: transform 0.3s ease;
+  transform-origin: center center;
+  will-change: transform;
+}
+
+.image-container:hover .zoom-image {
+  transform: scale(2);
+}
+
+
+
+body {
+  font-family: 'Poppins', sans-serif;
+ 
+  font-size: 18px;
+}
+
+/* No Copy Text */
+.no-copy {
+  user-select: none;
+  -webkit-user-select: none;
+  /* For Safari */
+  -moz-user-select: none;
+  /* For Firefox */
+  -ms-user-select: none;
+  /* For IE/Edge */
+}
+
+/* custom scrollbar */
+
+/* ::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #e5e7eb;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #949497;
+  border-radius: 10px;
+}
+
+
+::-webkit-scrollbar-thumb:hover {
+  background: #e5e5e6;
+}
+
+
+::-webkit-scrollbar-button {
+  display: none;
+  height: 0;
+  width: 0;
+} */
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #b1b1b1 #f0f0f0;
+}
+
+
+
+
+.route-loader {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(1px);
+  z-index: 9999;
+}
+
+.logo-pulse {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  animation: pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  50% {
+    transform: scale(1.12);
+    opacity: 0.7;
+  }
+}
+
+
+/* index.css */
+/* 
+.route-loader {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(4px);
+  z-index: 9999;
+}
+
+.logo-pulse {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  animation: pulse 1.2s ease-in-out infinite;
+}
+
+.logo-dot img {
+  width: 50px;
+  height: 50px;
+}
+
+@keyframes pulse {
+  0%,100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  50% {
+    transform: scale(1.12);
+    opacity: 0.7;
+  }
+} */
+
+
+
+/* input arrows hide */
+.no-arrow::-webkit-inner-spin-button,
+.no-arrow::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.no-arrow {
+  -moz-appearance: textfield;
+}
+
+/* close */
+
+
+
+/* logo design */
+@keyframes draw-black {
+  0% {
+    stroke-dashoffset: 600;
+    fill: rgba(43, 45, 66, 0);
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+    fill: rgba(43, 45, 66, 1);
+  }
+}
+
+@keyframes draw-red {
+  0% {
+    stroke-dashoffset: 60;
+    fill: rgba(208, 33, 40, 0);
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+    fill: rgba(208, 33, 40, 1);
+  }
+}
+
+.logo-main {
+  fill: rgba(43, 45, 66, 0);
+  stroke: #2b2d42;
+  stroke-dasharray: 600;
+  stroke-dashoffset: 600;
+  stroke-width: 1px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  animation: draw-black 3s ease-in infinite alternate;
+}
+
+.logo-tri {
+  fill: rgba(208, 33, 40, 0);
+  stroke: #d02128;
+  stroke-dasharray: 60;
+  stroke-dashoffset: 60;
+  stroke-width: 1px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  animation: draw-red 3s ease-in infinite alternate;
+}
+
+/* logo design end */
+
+
+/* 
+@keyframes draw-black {
+  0% {
+    stroke-dashoffset: 600;
+    fill: rgba(43, 45, 66, 0);
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+    fill: rgba(43, 45, 66, 1);
+  }
+}
+@keyframes draw-sub {
+  0% {
+    stroke-dashoffset: 600;
+    fill: rgba(240, 24, 24, 0);
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+    fill: rgb(236, 18, 18);
+  }
+}
+
+@keyframes draw-red {
+  0% {
+    stroke-dashoffset: 60;
+    fill: rgba(208, 33, 40, 0);
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+    fill: rgba(208, 33, 40, 1);
+  }
+}
+
+.logo-main {
+  fill: rgba(43, 45, 66, 0);
+  stroke: #2b2d42;
+  stroke-dasharray: 600;
+  stroke-dashoffset: 600;
+  stroke-width: 0.3px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  animation: draw-black 4s ease-in infinite alternate;
+}
+.logo-sub {
+  fill: rgba(255, 4, 4, 0);
+  stroke: #f10c0c;
+  stroke-dasharray: 600;
+  stroke-dashoffset: 600;
+  stroke-width: 0.3px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  animation: draw-sub 4s ease-in infinite alternate;
+}
+
+.logo-tri {
+  fill: rgba(208, 33, 40, 0);
+  stroke: #d02128;
+  stroke-dasharray: 60;
+  stroke-dashoffset: 60;
+  stroke-width: 1px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  animation: draw-red 3s ease-in infinite alternate;
+} */
+
+
+
+
+/* Sidebar Custom Scrollbar */
+/* 
+.sidebar-scroll {
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.sidebar-scroll::-webkit-scrollbar {
+  width: 0;
+}
+
+.sidebar-scroll:hover {
+  scrollbar-width: thin;
+}
+
+.sidebar-scroll:hover::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar-scroll:hover::-webkit-scrollbar-thumb {
+  background: #999;
+  border-radius: 10px;
+}
+
+.sidebar-scroll:hover::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sidebar-scroll::-webkit-scrollbar-button {
+  display: none;
+  width: 0;
+  height: 0;
+} */
+
+
+
+
+/* Scrollbar normally hidden */
+/* .category-sidebar {
+    position: relative;
+}
+
+
+.category-sidebar .category-scroll-track {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    transition:
+        opacity 0.2s ease,
+        visibility 0.2s ease;
+}
+
+
+.category-sidebar:hover .category-scroll-track {
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+
+.category-sidebar .category-scroll-thumb {
+    background: #9ca3af !important;
+    transition: background 0.2s ease;
+}
+
+
+.category-sidebar .category-scroll-thumb:hover {
+    background: #4b5563 !important;
+} */

@@ -15,7 +15,7 @@ const useCategories = () => {
     try {
       setLoading(true);
       setError(null);
-      const res = await axios.get(`${API_BASE_URL}/categories`);
+      const res = await axios.get(`${API_BASE_URL}/category-navigation`);
       setCategories(res.data);
     } catch (err) {
       setError(err.response?.data?.message || err.message);

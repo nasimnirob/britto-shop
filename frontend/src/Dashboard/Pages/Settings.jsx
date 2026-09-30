@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
-import { useSiteSettings } from '../../Context/SiteSettingsContext';
+import { useSettings } from '../../Context/SettingsContext';
 
-const SiteSettings = () => {
-  const { coverEnabled, setCoverEnabled } = useSiteSettings();
+
+const Settings = () => {
+  const { coverEnabled, setCoverEnabled } = useSettings();
 
   return (
     <div className="flex flex-col gap-2">
@@ -23,10 +24,9 @@ const SiteSettings = () => {
             onChange={() => setCoverEnabled(!coverEnabled)}
           />
         </div>
-
       </div>
     </div>
   )
 }
 
-export default SiteSettings
+export default Settings

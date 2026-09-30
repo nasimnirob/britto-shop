@@ -5,7 +5,6 @@ import { AiOutlineClose } from "react-icons/ai";
 
 import { TiArrowLeft } from "react-icons/ti";
 import { PiBagLight } from "react-icons/pi";
-import { BsDashLg } from "react-icons/bs";
 import { BiMoon, BiSun } from "react-icons/bi";
 import useCategories from "../../Hooks/useCategories";
 import useTheme from "../../Hooks/useTheme";
@@ -14,7 +13,7 @@ import { useTranslation } from "react-i18next";
 import LanguageSelector from "../Language/LanguageSelector";
 import { RxPerson } from "react-icons/rx";
 import { CiSearch } from "react-icons/ci";
-import { Handbag, Minus, Plus, Trash2 } from 'lucide-react';
+import { ChevronDown, Handbag, Minus, Plus, Search, Trash2 } from 'lucide-react';
 import Logo from "../Logo/Logo";
 import { useCart } from "../../Context/CartContext";
 
@@ -33,6 +32,12 @@ const Navbar = ({ openCart, setOpenCart, openProfile, setOpenProfile, open, setO
   const [showNavbar, setShowNavbar] = useState(true);
   const inputRef = useRef(null);
   const boxRef = useRef(null);
+
+
+  const [openMobileType, setOpenMobileType] = useState(null);
+  const [openMobileCategory, setOpenMobileCategory] = useState(null);
+
+
 
   const { t } = useTranslation();
 
@@ -166,7 +171,7 @@ const Navbar = ({ openCart, setOpenCart, openProfile, setOpenProfile, open, setO
               : "text-inherit hover:text-orange-400 text-base lg:px- lg:py-1.5 md:py-1.5 py-1 xl:px-5"
           }
         >
-          <h2 className="flex justify-between text-base lg:text-lg items-center gap-3 pl-2 lg:pl-0 lg:bg-transparent  md:bg-transparent bg-black bg-opacity-40 shadow-md lg:shadow-none lg:py-0 md:py-0 py-1 italic">
+          <h2 className="flex justify-between text-base lg:text-base items-center gap-3 pl-2 lg:pl-0 lg:bg-transparent  md:bg-transparent bg-black bg-opacity-40 shadow-md lg:shadow-none lg:py-0 md:py-0 py-1 italic font-poppins uppercase">
             <span>{t("Home")}</span>
             {/* <span> <IoIosArrowDown /></span> */}
           </h2>
@@ -184,14 +189,14 @@ const Navbar = ({ openCart, setOpenCart, openProfile, setOpenProfile, open, setO
               : "text-inherit hover:text-orange-400 text-base lg:px- lg:py-1.5 md:py-1.5 py-1 xl:px-5"
           }
         >
-          <h2 className="flex justify-between text-base lg:text-lg items-center gap-3 pl-2 lg:pl-0 lg:bg-transparent  md:bg-transparent bg-black bg-opacity-40 shadow-md lg:shadow-none lg:py-0 py-1   md:py-0 italic">
+          <h2 className="flex justify-between text-base lg:text-base items-center gap-3 pl-2 lg:pl-0 lg:bg-transparent  md:bg-transparent bg-black bg-opacity-40 shadow-md lg:shadow-none lg:py-0 py-1   md:py-0 italic font-poppins uppercase">
             <span>{t("Shop")} </span>
             {/* <span> <IoIosArrowDown /></span> */}
           </h2>
         </NavLink>
       </li>
 
-      <ul className="flex md:flex-row flex-col md:gap-6 gap-1">
+      {/* <ul className="flex md:flex-row flex-col md:gap-6 gap-1">
         {categories[0]?.productTypes?.map((productType) => (
           <li key={productType.slug} className="relative group">
 
@@ -211,21 +216,21 @@ const Navbar = ({ openCart, setOpenCart, openProfile, setOpenProfile, open, setO
                 {productType.categories?.map((category) => (
                   <div key={category.slug}>
 
-                    {/* Category */}
                     <h3 className="font-semibold text-gray-800 mb-3">
                       {category.category}
                     </h3>
 
                     <ul className="space-y-2">
                       {category.subCategories?.map((subCategory) => (
-                        <li key={subCategory}>
+                        <li key={subCategory.slug}>
                           <NavLink
-                            to={`/category/${productType.slug}/${category.slug}/${subCategory
+                            to={`/category/${productType.slug}/${category.slug}/${subCategory.slug
                               .toLowerCase()
-                              .replace(/\s+/g, "-")}`}
+                              .replace(/\s+/g, "-")
+                              }`}
                             className="text-sm text-gray-600 hover:text-orange-400"
                           >
-                            {subCategory}
+                            {subCategory.name}
                           </NavLink>
                         </li>
                       ))}
@@ -238,13 +243,323 @@ const Navbar = ({ openCart, setOpenCart, openProfile, setOpenProfile, open, setO
             </div>
           </li>
         ))}
+      </ul> */}
+
+
+      {/* ================= CATEGORY NAVIGATION ================= */}
+
+      <ul className="flex md:flex-row flex-col md:gap-0  gap-1 font-poppins">
+
+        {categories?.data?.map((productType) => (
+          <li key={productType.slug} className="relative group ">
+
+            {/* ================= PRODUCT TYPE ================= */}
+
+            <div className="flex items-center justify-between">
+
+              <NavLink
+                to={`/category/${productType.slug}`}
+                onClick={() => {
+                  // Desktop + mobile route
+                  setOpen(false);
+                }}
+                className={({ isActive }) =>
+                  isActive
+                    ? "text-orange-400 text-base italic flex-1"
+                    : "text-inherit hover:text-orange-400 text-base italic flex-1"
+                }
+              >
+                <h2 className="flex items-center md:justify-center text-base lg:text-base md:px-1.5 px-2 lg:bg-transparent md:bg-transparent bg-black bg-opacity-40 shadow-md lg:shadow-none lg:py-0 py-1 md:py-0 uppercase">
+                  {productType.type}
+                </h2>
+              </NavLink>
+
+
+              {/* Mobile Expand Button */}
+
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+
+                  setOpenMobileType(
+                    openMobileType === productType.slug
+                      ? null
+                      : productType.slug
+                  );
+                }}
+                className="
+              md:hidden
+              lg:hidden
+              px-1
+              py-[3px]
+              border-[0.1px]
+              border-black/40
+              flex
+              items-center
+              justify-center
+              text-gray-300
+              hover:text-orange-400
+            "
+              >
+                <span
+                  className={`
+              text-xl
+              transition-transform
+              duration-300
+              ${openMobileType === productType.slug
+                      ? "rotate-180"
+                      : ""
+                    }
+            `}
+                >
+                  <ChevronDown />
+                </span>
+              </button>
+
+            </div>
+
+
+            {/*  DESKTOP DROPDOWN  */}
+
+            <div
+              className="
+                  absolute
+                  left-0
+                  top-full
+                  hidden
+                  md:group-hover:block
+                  bg-white
+                  dark:bg-gray-900
+                  shadow-lg
+                  z-50
+                  min-w-[600px]
+                  p-6
+                "
+            >
+
+              <div className="grid grid-cols-3 gap-6">
+
+                {productType.categories?.map((category) => (
+
+                  <div key={category.slug}>
+
+                    {/* Category */}
+
+                    <h3 className="font-semibold text-gray-800 dark:text-gray-200 mb-3">
+                      {category.category}
+                    </h3>
+
+
+                    {/* Subcategories */}
+
+                    <ul className="space-y-2">
+
+                      {category.subCategories?.map((subCategory) => (
+
+                        <li key={subCategory.slug}>
+
+                          <NavLink
+                            to={`/category/${productType.slug}/${category.slug}/${subCategory.slug}`}
+                            onClick={() => setOpen(false)}
+                            className="
+                        text-sm
+                        text-gray-600
+                        dark:text-gray-400
+                        hover:text-orange-400
+                      "
+                          >
+                            {subCategory.name}
+                          </NavLink>
+
+                        </li>
+
+                      ))}
+
+                    </ul>
+
+                  </div>
+
+                ))}
+
+              </div>
+
+            </div>
+
+
+            {/*  MOBILE DROPDOWN  */}
+
+            {/* <div
+              className={`
+                lg:hidden
+                md:hidden
+                overflow-hidden
+                transition-all
+                duration-300
+                ease-in-out
+                ${openMobileType === productType.slug
+                        ? "max-h-[2000px] opacity-100"
+                        : "max-h-0 opacity-0"
+                      }
+              `}
+                  >
+
+              <div className="ml-3 mr-2 mt-1 border-l border-gray-600/40">
+
+                {productType.categories?.map((category) => (
+
+                  <div key={category.slug}>
+
+
+
+                    <div className="flex items-center justify-between">
+
+                      <NavLink
+                        to={`/category/${productType.slug}/${category.slug}`}
+                        onClick={() => setOpen(false)}
+                        className="
+                    flex-1
+                    px-4
+                    py-2
+                    text-sm
+                    text-gray-300
+                    hover:text-orange-400
+                  "
+                      >
+                        {category.category}
+                      </NavLink>
+
+
+
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const key = `${productType.slug}-${category.slug}`;
+
+                          setOpenMobileCategory(
+                            openMobileCategory === key
+                              ? null
+                              : key
+                          );
+                        }}
+                        className="
+                    w-10
+                    h-9
+                    flex
+                    items-center
+                    justify-center
+                    text-gray-400
+                    hover:text-orange-400
+                  "
+                      >
+                        <span
+                          className={`
+                      transition-transform
+                      duration-300
+                      ${openMobileCategory ===
+                              `${productType.slug}-${category.slug}`
+                              ? "rotate-180"
+                              : ""
+                            }
+                    `}
+                        >
+                          <ChevronDown />
+                        </span>
+                      </button>
+
+                    </div>
+
+
+
+
+                    <div
+                      className={`
+                  overflow-hidden
+                  transition-all
+                  duration-300
+                  ${openMobileCategory ===
+                          `${productType.slug}-${category.slug}`
+                          ? "max-h-[1000px]"
+                          : "max-h-0"
+                        }
+                `}
+                    >
+
+                      <ul className="ml-5 border-l border-gray-700/40 pb-1">
+
+                        {category.subCategories?.map((subCategory) => (
+
+                          <li key={subCategory.slug}>
+
+                            <NavLink
+                              to={`/category/${productType.slug}/${category.slug}/${subCategory.slug}`}
+                              onClick={() => setOpen(false)}
+                              className="
+                          block
+                          px-4
+                          py-1.5
+                          text-[13px]
+                          text-gray-400
+                          hover:text-orange-400
+                          transition-colors
+                        "
+                            >
+                              {subCategory.name}
+                            </NavLink>
+
+                          </li>
+
+                        ))}
+
+                      </ul>
+
+                    </div>
+
+                  </div>
+
+                ))}
+
+              </div>
+
+            </div> */}
+
+            <div className={` lg:hidden md:hidden overflow-hidden transition-all duration-300 ease-in-out
+               ${openMobileType === productType.slug ? "max-h-[2000px] opacity-100" : "max-h-0 opacity-0"} `} >
+              <div className="ml-3 mr-2 mt-1 border-l border-gray-600/40 ">
+                {productType.categories?.map((category) =>
+                (<div key={category.slug}> {/* ================= CATEGORY NAME ================= */}
+                  {/* <div className="px-4 pt-3 pb-1">
+                    <h3 className="text-sm font-semibold text-orange-400">
+                      {category.category} </h3>
+                  </div> */}
+                  {/* ================= SUBCATEGORIES ================= */}
+                  <ul className="ml-3 pb-2">
+                    {category.subCategories?.map((subCategory) =>
+                    (<li key={subCategory.slug}>
+                      <NavLink to={`/category/${productType.slug}/${category.slug}/${subCategory.slug}`}
+                        onClick={() => { setOpen(false); setOpenMobileType(null); }}
+                        className=" block px-4 py-1.5 text-[15px] text-gray-300 hover:text-orange-400 transition-colors font-poppins" >
+                        {subCategory.name}
+                      </NavLink>
+                    </li>))}
+                  </ul>
+                </div>))}
+              </div>
+            </div>
+
+
+          </li>
+        ))}
+
       </ul>
+
 
       {user ? (
         <>
           <li
-            className="bottom-20 right-0 w-full lg:w-auto text-center pr-2 bg-black bg-opacity-40 shadow-md
-                                    fixed lg:my-0 my-1 lg:bg-transparent lg:shadow-none md:hidden lg:hidden"
+            className="my-7  right-0 w-full lg:w-auto text-center pr-2 bg-black bg-opacity-40 shadow-md
+                                     lg:my-0 lg:bg-transparent lg:shadow-none md:hidden lg:hidden"
           >
             <button
               onClick={handleLogout}
@@ -258,7 +573,7 @@ const Navbar = ({ openCart, setOpenCart, openProfile, setOpenProfile, open, setO
         </>
       ) : (
         <>
-          <li className="lg:my-0 md:my-0 my-1 lg:hidden md:hidden block">
+          <li className=" lg:my-0 md:my-0 my-1 lg:hidden md:hidden block mt-">
             <NavLink
               to="/login"
               onClick={() => {
@@ -276,7 +591,7 @@ const Navbar = ({ openCart, setOpenCart, openProfile, setOpenProfile, open, setO
               </h2>
             </NavLink>
           </li>
-          <li className="lg:my-0 my-1 lg:hidden md:hidden ">
+          <li className="lg:my-0 my-1 lg:hidden md:hidden mb-8">
             <NavLink
               to="/register"
               onClick={() => {
@@ -361,7 +676,7 @@ const Navbar = ({ openCart, setOpenCart, openProfile, setOpenProfile, open, setO
 
             </div>
 
-            <div onClick={()=>{setSearch(true)}} className="navbar-center hidden lg:flex md:block  items-center justify-center px-0.5">
+            <div onClick={() => { setSearch(true) }} className="navbar-center hidden lg:flex md:block  items-center justify-center px-0.5">
               <div className=" lg:w-full  ">
                 <div className="flex items-center lg:w-96 w- rounded-[5px] overflow-hidden border-[0.00000000000001px] border-dashed border-[#fb923c] text-center justify-center">
                   <input
@@ -381,7 +696,7 @@ const Navbar = ({ openCart, setOpenCart, openProfile, setOpenProfile, open, setO
             <div className="navbar-end flex justify-end items-center lg:gap-3 md:gap-2 gap-2">
               <div className="relative z-50 lg:hidden md:hidden">
                 {/* Search Button */}
-                <button
+                {/* <button
                   onClick={handleSearchOpen}
                   className="relative z-0 w-10 h-10 rounded-full p-0.5"
                 >
@@ -392,10 +707,10 @@ const Navbar = ({ openCart, setOpenCart, openProfile, setOpenProfile, open, setO
                         : "hover:bg-black/5 dark:hover:bg-[#2a2a2a]"
                       }`}
                   />
-                </button>
+                </button> */}
 
                 {/* Search Box */}
-                <div
+                {/* <div
                   ref={boxRef}
                   onTransitionEnd={handleTransitionEnd}
                   className={`
@@ -423,11 +738,11 @@ const Navbar = ({ openCart, setOpenCart, openProfile, setOpenProfile, open, setO
                     placeholder="Search"
                     className="w-full bg-transparent py-2 pr-4 outline-none text-black dark:text-white placeholder:text-black/60 dark:placeholder:text-gray-400 placeholder:font-poppins placeholder:clear font-poppins"
                   />
-                </div>
+                </div> */}
               </div>
 
 
-              <div
+              <div 
                 ref={profileRef}
                 className={`z-50 relative ml-1 flex items-center justify-center rounded-full h-10
                         ${openProfile && user ? " bg-black/15 dark:bg-black/10 w-10 h-10 " : " h-10 w-10 "}
@@ -438,7 +753,7 @@ const Navbar = ({ openCart, setOpenCart, openProfile, setOpenProfile, open, setO
 
                 {
                   user ? <>
-                    <div className="">
+                    <NavLink to='/profile' className="">
                       <button className="lg:block md:block hidden lg:h-16 md:h-16 h-10 -mt-4 -mb-4">
                         {loading ? (
                           <div className="w-10 h-10 bg-gray-200 rounded-full animate-pulse"></div>
@@ -453,7 +768,7 @@ const Navbar = ({ openCart, setOpenCart, openProfile, setOpenProfile, open, setO
                           <RxPerson className="text-4xl rounded-full border-yellow-700 p-1 mt-1.5 hover:bg-black/10 dark:hover:bg-black/15" />
                         )}
                       </button>
-                    </div>
+                    </NavLink>
                   </>
                     :
                     <>
@@ -477,7 +792,7 @@ const Navbar = ({ openCart, setOpenCart, openProfile, setOpenProfile, open, setO
                 }
 
                 {/* Profile Button */}
-                <NavLink to='/profile' className=" h-16 px-0 -mb-4 -mt-4 lg:hidden md:hidden block py-2.5 hover:text-orange-400 "
+                <NavLink  className=" h-16 px-0 -mb-4 -mt-4 lg:hidden md:hidden block py-2.5 hover:text-orange-400 "
                   onClick={handleProfileToggle}
                 >
                   <button className="">
@@ -1165,17 +1480,14 @@ const Navbar = ({ openCart, setOpenCart, openProfile, setOpenProfile, open, setO
           </ul>
         </div>
 
+        {/* mobile menu */}
         <div
           ref={menuRef}
-          className={`lg:hidden md:hidden fixed top-0 left-0 h-screen 
-                    lg:w-[505px] md:w-[240px] sm:w-[320px] w-[300px]
-                    z-[60] bg-black/30 backdrop-blur-2xl
-                    border-r border-[#17161622] shadow-sm text-white
-                    transform transition-transform duration-500 ease-in-out
-                    ${open ? "translate-x-0 " : "-translate-x-full"}
+          className={`lg:hidden md:hidden fixed top-0 left-0 h-screen lg:w-[505px] md:w-[240px] sm:w-[320px] w-[300px] z-[60] bg-black/30 backdrop-blur-2xl border-r border-[#17161622] shadow-sm text-white transform transition-transform duration-500 ease-in-out overflow-y-auto
+             ${open ? "translate-x-0 " : "-translate-x-full"}
                   `}
         >
-          < div className="flex flex-row  lg:hidden md:hidden pt-2.5 pl-2 pb-4 bg-black/20">
+          <div className="flex flex-row  lg:hidden md:hidden pt-2.5 pl-2 pb-4 bg-black/20">
             <div
               onClick={handleToggle}
               role="button"
@@ -1216,18 +1528,18 @@ const Navbar = ({ openCart, setOpenCart, openProfile, setOpenProfile, open, setO
           {navLink}
         </div>
 
-        <div className={`${showNavbar ? 'translate-y-[66px] transition-all duration-300 ease-in-out' : 'translate-y-0 transition-all duration-300 ease-in-out'}`}>
+        <div className={`${showNavbar ? 'translate-y-[64px] transition-all duration-300 ease-in-out' : 'translate-y-0 transition-all duration-300 ease-in-out'}`}>
           <div className="navbar-center block md:hidden  items-center justify-center ">
             <div className="  lg:w-full  ">
               <div className="flex items-center lg:w-96  overflow-hidden  text-center justify-center">
                 <input
-                  className={`border border-yellow-600 border-r-0 ${isSticky ? "font-poppins   w-full px-3 py-2 bg-black/50 backdrop-blur-2xl placeholder:text-sm placeholder:text-gray-200 dark:placeholder:text-gray-300 text-[15px]  outline-none ring-0 focus:outline-none " : "font-poppins  w-full  px-3 py-2 bg-black/5 placeholder:text-sm placeholder:text-gray-900 text-black bg-white dark:placeholder:text-gray-200 text-[15px]  outline-none ring-0 focus:outline-none "}`}
+                  className={`border border-black border-r-0 ${isSticky ? "font-poppins text-white  w-full px-3 py-2 bg-black/50 backdrop-blur-2xl placeholder:text-sm placeholder:text-gray-200 dark:placeholder:text-gray-300 text-[15px]  outline-none ring-0 focus:outline-none " : "font-poppins  w-full  px-3 py-2 bg-black/5 placeholder:text-sm placeholder:text-gray-900 text-black bg-white dark:placeholder:text-gray-700 text-[15px]  outline-none ring-0 focus:outline-none "}`}
                   type="search"
                   placeholder="Search product name..."
                 />
-                <div className="border border-yellow-600">
-                  <button className="h-[39px] w-[36px] flex items-center justify-center bg-[#fb923c] hover:bg-yellow-500 transition text-black ">
-                    <CiSearch className="absolute " />
+                <div className="border border-black">
+                  <button className="h-[39px] w-[36px] flex items-center justify-center bg-black hover:bg-yellow-500 transition text-white ">
+                    <Search className="absolute p-0.5" />
                   </button>
                 </div>
               </div>

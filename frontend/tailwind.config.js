@@ -7,11 +7,13 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        playfair: ['Playfair', 'serif'],
+        playfair: ['Playfair Display', 'serif'],
         poppins: ['Poppins', 'sans-serif'],
         libre: ['Libre Baskerville', 'serif'],
-        time: ['Times New Roman', 'time', 'serif']
+        inter: ['Inter', 'sans-serif'],
+        time: ['Times New Roman', 'Times', 'serif'],
       },
+
       colors: {
         primary: {
           DEFAULT: "#ffffff",
@@ -19,7 +21,7 @@ export default {
         },
         secondary: {
           DEFAULT: "#4b5563",
-          dark: "#d1d5db",
+          dark: "#252728",
         },
         container: {
           DEFAULT: "#f9fafb",
@@ -56,9 +58,9 @@ export default {
         "slide-in-down": "slideInDown 0.9s ease-in-out",
       },
       screens: {
-            '3xl': '1920px',
-            '4xl': '2560px',
-        },
+        '3xl': '1920px',
+        '4xl': '2560px',
+      },
     },
   },
   plugins: [

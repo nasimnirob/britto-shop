@@ -1,5 +1,3 @@
-
-
 import { BsFillQuestionSquareFill } from "react-icons/bs";
 import { MdOutlineManageAccounts } from "react-icons/md";
 import { RiDashboardHorizontalFill, RiHome4Fill, RiWallet3Fill } from "react-icons/ri";
@@ -9,8 +7,6 @@ import { NavLink } from "react-router-dom";
 
 const Navbar = () => {
     return (
-
-
         <div className="visible lg:hidden md:hidden fixed z-50 w-full h-16 max-w-lg -translate-x-1/2 bg-white shadow-stone-200 shadow-lg border border-gray-200 rounded-none bottom-0 left-1/2 dark:bg-gray-700 dark:border-gray-600">
             <div className="grid grid-cols-5 h-full max-w-lg  mx-auto">
                 <NavLink

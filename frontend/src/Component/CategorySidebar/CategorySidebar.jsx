@@ -5,6 +5,8 @@ import { useState } from "react";
 function CategorySidebar({ categories }) {
   const [showScrollbar, setShowScrollbar] = useState(false);
 
+  // console.log(categories)
+
   return (
     <div
       className="category-sidebar h-full w-full"
@@ -76,11 +78,11 @@ function CategorySidebar({ categories }) {
             Categories
           </h2> */}
 
-          {categories?.[0]?.productTypes?.map((type) => (
+          {categories?.data?.map((type) => (
             <div key={type.slug} className="mb-5">
 
 
-              <h3 className="text-lg font-semibold mb-2">
+              <h3 className="text-base font-semibold mb-2 uppercase">
                 {type.type}
               </h3>
 
@@ -98,19 +100,18 @@ function CategorySidebar({ categories }) {
 
                       {category.subCategories?.map((subCategory) => (
                         <NavLink
-                          key={subCategory}
-                          to={`/category/${type.slug}/${category.slug}/${subCategory
+                          key={subCategory.slug}
+                          to={`/category/${type.slug}/${category.slug}/${subCategory.slug
                             .toLowerCase()
-                            .replace(/\s+/g, "-")}`}
-                          className="
-                                  text-sm
-                                  text-gray-500
-                                  dark:text-gray-400
-                                  hover:text-orange-500
-                                  transition-colors
-                                "
+                            .replace(/\s+/g, "-")
+                            }`}
+                          className={({ isActive }) =>
+                                      isActive
+                                        ? "text-orange-400 text-sm dark:text-gray-400 hover:text-orange-500 transition-colors"
+                                        : "text-sm text-gray-500 dark:text-gray-400 hover:text-orange-500 transition-colors"
+                                    }    
                         >
-                          {subCategory}
+                          {subCategory.name}
                         </NavLink>
                       ))}
 

@@ -30,7 +30,7 @@ const MainLayout = () => {
 
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-primary-dark">
+    <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-primary-dark  dark:text-[#E2E5E6] text-black">
 
       <ScrollManager />
 
@@ -38,7 +38,7 @@ const MainLayout = () => {
       {showLoader && <RouteLoader loading={loading} />}
 
       {/* Navbar */}
-      <div className="lg:mt-[105px] md:mt-[105px] mt-[66px]">
+      <div className="lg:mt-[105px] md:mt-[101px] mt-[111px]">
         <Navbar
           openCart={openCart}
           setOpenCart={setOpenCart}

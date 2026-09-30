@@ -6,8 +6,9 @@ import Router from './Routes/Router.jsx'
 import AuthProviders from './providers/AuthProviders.jsx'
 import { HelmetProvider } from 'react-helmet-async';
 import './i18n';
-import { SiteSettingsProvider } from './Context/SiteSettingsContext.jsx'
 import { CartProvider } from './Context/CartContext.jsx'
+import { SettingsProvider } from './Context/SettingsContext.jsx'
+import { Toaster } from 'react-hot-toast'
 
 
 createRoot(document.getElementById('root')).render(
@@ -15,11 +16,12 @@ createRoot(document.getElementById('root')).render(
     <HelmetProvider>
       <AuthProviders>
         <CartProvider>
-          <SiteSettingsProvider>
-            <div className='max-w-screen- mx-auto bg-primary dark:bg-primary-dark font-time'>
+          <SettingsProvider>
+            <div className='max-w-screen- mx-auto bg-primary dark:bg-primary-dark text-[#080809] dark:text-[#E2E5E6] font-inter'>
               <RouterProvider router={Router} />
+              <Toaster />
             </div>
-          </SiteSettingsProvider>
+          </SettingsProvider>
         </CartProvider>
       </AuthProviders>
     </HelmetProvider>

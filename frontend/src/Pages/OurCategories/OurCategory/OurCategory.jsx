@@ -4,9 +4,18 @@ import { Link, useParams, useNavigate } from "react-router-dom";
 import useCategories from "../../../Hooks/useCategories";
 import { IoHomeOutline } from "react-icons/io5";
 import CategorySidebar from "../../../Component/CategorySidebar/CategorySidebar";
+import useBundleProducts from "../../../Hooks/useBundleProducts";
 
 const OurCategory = () => {
   const { products = [] } = useProducts();
+  const { bundles = [] } = useBundleProducts({
+    autoFetch: true,
+    initialFilters: {
+      isActive: "true",
+      page: 1,
+      limit: 100,
+    },
+  });
   const { categories = [] } = useCategories();
 
   const navigate = useNavigate();
@@ -72,15 +81,68 @@ const OurCategory = () => {
   // /category/men's-collection/topwear/jacket
   // ========================================
 
+  // const filteredProducts =
+  //   selectedProductType?._id &&
+  //     selectedCategory?._id &&
+  //     selectedSubCategory?._id
+  //     ? products.filter(
+  //       (product) =>
+  //         product.productTypeId === selectedProductType._id &&
+  //         product.categoryId === selectedCategory._id &&
+  //         product.subCategoryId === selectedSubCategory._id
+  //     )
+  //     : [];
+
+  // ✅ Bundle কে product এর মতো shape এ convert করি
+  const bundlesAsProducts = bundles.map((bundle) => ({
+    ...bundle,
+
+    // Mark করে দিই যাতে OrderCard আলাদা style দিতে পারে (optional)
+    isBundle: true,
+
+    // Bundle এর নিজের fields
+    productTypeId: bundle.productTypeId,
+    categoryId: bundle.categoryId,
+    subCategoryId: bundle.subCategoryId,
+
+    // Price shape product এর মতো
+    price: {
+      sellingPrice:
+        bundle.pricing?.sellingPrice ??
+        bundle.price?.sellingPrice ??
+        0,
+      mrp:
+        bundle.pricing?.originalValue ??
+        bundle.price?.mrp ??
+        0,
+      discountPercent:
+        bundle.pricing?.discountPercent ?? 0,
+      currency: "BDT",
+    },
+
+    // Stock
+    totalStock: bundle.totalStock || 0,
+
+    // Product card slug path — bundle হলে /bundle/:slug
+    bundleSlug: bundle.slug,
+  }));
+
+  // ✅ Regular products + bundle একসাথে
+  const allItems = [...products, ...bundlesAsProducts];
+
+  // ✅ Selected category দিয়ে filter
   const filteredProducts =
     selectedProductType?._id &&
       selectedCategory?._id &&
       selectedSubCategory?._id
-      ? products.filter(
+      ? allItems.filter(
         (product) =>
-          product.productTypeId === selectedProductType._id &&
-          product.categoryId === selectedCategory._id &&
-          product.subCategoryId === selectedSubCategory._id
+          String(product.productTypeId) ===
+          String(selectedProductType._id) &&
+          String(product.categoryId) ===
+          String(selectedCategory._id) &&
+          String(product.subCategoryId) ===
+          String(selectedSubCategory._id)
       )
       : [];
 

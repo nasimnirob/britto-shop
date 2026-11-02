@@ -3,14 +3,6 @@ import axios from 'axios';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
-/**
- * Fetches a filtered/paginated product list from the backend and exposes
- * create/update/delete actions for the dashboard.
- *
- * Usage:
- *   const { products, loading, error, totalPages, addProduct, updateProduct, deleteProduct }
- *     = useProducts({ productType: 'Men', category: 'Topwear', page: 1, limit: 20 });
- */
 const useProducts = (filters = {}) => {
     const [products, setProducts] = useState([]);
     const [total, setTotal] = useState(0);

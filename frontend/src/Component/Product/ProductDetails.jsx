@@ -11,8 +11,7 @@ import SizeChartDisplay from "../SizeChart/SizeChartDisplay";
 const ProductDetails = () => {
     const { id } = useParams();
     const navigate = useNavigate();
-
-    const { products } = useProducts();
+    const { products, loading } = useProducts();
     const { colors } = useColors();
     const { sizes } = useSizes();
     const { addToCart } = useCart();
@@ -160,8 +159,12 @@ const ProductDetails = () => {
 
     // ---------- Preview show logic ----------
     // validation ছাড়া — শুধু select করলেই দেখাবে
-    const showPreview =
-        Boolean(selectedColor) || Boolean(selectedSize);
+    // const showPreview =
+    //      Boolean(selectedColor) || Boolean(selectedSize);
+
+    const showPreview = hasColor && hasSize
+        ? Boolean(selectedColor && selectedSize)
+        : Boolean(selectedColor || selectedSize);
 
     // ---------- Quantity ----------
     const increase = () => {
@@ -248,6 +251,78 @@ const ProductDetails = () => {
         navigate("/checkout?buyNow=true");
     };
 
+    // ✅ 1. Loading Skeleton — সবার আগে
+    if (loading) {
+        return (
+            <div className="text-black dark:text-[#E2E5E9] my-2 w-full animate-">
+                <div className="grid lg:grid-cols-5 md:grid-cols-2 grid-cols-1 w-full">
+                    {/* ===== Images Skeleton ===== */}
+                    <div className="lg:col-span-3 col-span-5 flex flex-col">
+                        <div className="flex lg:flex-row-reverse md:flex-row-reverse flex-col justify-center">
+                            {/* Main image */}
+                            <div className="lg:w-[770px] lg:h-[770px] md:w-[700px] md:h-[700px] w-full h-[500px] bg-gray-200 dark:bg-gray-800 rounded" />
+
+                            {/* Thumbnails */}
+                            <div className="flex p-2 lg:pt-0 gap-2 lg:flex-col md:flex-col lg:justify-start lg:items-start md:justify-start md:items-start items-center justify-center">
+                                {[1, 2, 3, 4].map((i) => (
+                                    <div
+                                        key={i}
+                                        className="lg:w-[95px] lg:h-[110px] md:w-[95px] md:h-[110px] w-[70px] h-[70px] bg-gray-200 dark:bg-gray-800 rounded"
+                                    />
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* ===== Info Skeleton ===== */}
+                    <div className="lg:col-span-2 col-span-2 p-3 space-y-3">
+                        {/* Title */}
+                        <div className="h-8 bg-gray-200 dark:bg-gray-800 rounded w-3/4" />
+
+                        {/* Stock */}
+                        <div className="h-6 bg-gray-200 dark:bg-gray-800 rounded w-1/4" />
+
+                        {/* Price */}
+                        <div className="h-8 bg-gray-200 dark:bg-gray-800 rounded w-1/2" />
+
+                        {/* Size chart / color placeholder */}
+                        <div className="h-16 bg-gray-200 dark:bg-gray-800 rounded" />
+
+                        {/* Size selector */}
+                        <div className="flex gap-2">
+                            {[1, 2, 3, 4].map((i) => (
+                                <div
+                                    key={i}
+                                    className="w-10 h-10 bg-gray-200 dark:bg-gray-800 rounded"
+                                />
+                            ))}
+                        </div>
+
+                        {/* Selected preview */}
+                        <div className="h-24 bg-gray-200 dark:bg-gray-800 rounded" />
+
+                        {/* Quantity */}
+                        <div className="h-10 w-28 bg-gray-200 dark:bg-gray-800 rounded" />
+
+                        {/* Buttons */}
+                        <div className="flex gap-3 pt-2">
+                            <div className="flex-1 h-10 bg-gray-200 dark:bg-gray-800 rounded" />
+                            <div className="flex-1 h-10 bg-gray-200 dark:bg-gray-800 rounded" />
+                        </div>
+                    </div>
+
+                    {/* ===== Description Skeleton ===== */}
+                    <div className="col-span-5 px-2 my-3">
+                        <div className="h-8 w-40 bg-gray-200 dark:bg-gray-800 rounded mb-3" />
+                        <div className="h-4 w-32 bg-gray-200 dark:bg-gray-800 rounded mb-2" />
+                        <div className="h-20 bg-gray-200 dark:bg-gray-800 rounded" />
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    // ✅ 2. Product Not Found
     if (!product) {
         return (
             <div className="min-h-[400px] flex items-center justify-center">

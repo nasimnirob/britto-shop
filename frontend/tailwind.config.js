@@ -12,6 +12,7 @@ export default {
         libre: ['Libre Baskerville', 'serif'],
         inter: ['Inter', 'sans-serif'],
         time: ['Times New Roman', 'Times', 'serif'],
+        hindSiliguri: ["Hind Siliguri", "sans-serif"],
       },
 
       colors: {

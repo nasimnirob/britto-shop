@@ -522,7 +522,7 @@ const Products = () => {
     }, [page, totalPages]);
 
     return (
-        <div className="min-h-full bg-gray-50 p-4 dark:bg-gray-950 md:p-6">
+        <div className="min-h-full bg-gray-50 p-4 dark:bg-primary-dark md:p-6">
 
             {/* ========================================
           HEADER
@@ -545,7 +545,7 @@ const Products = () => {
                     <button
                         type="button"
                         onClick={fetchProducts}
-                        className="inline-flex items-center justify-center gap-2 rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 dark:hover:bg-gray-800"
+                        className="inline-flex items-center justify-center gap-2 rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:bg-secondary-dark dark:text-gray-300 dark:hover:bg-gray-800"
                     >
                         <RefreshCw
                             size={16}
@@ -582,7 +582,7 @@ const Products = () => {
           FILTERS
       ========================================= */}
 
-            <div className="mb-5 rounded-xl border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-gray-900">
+            <div className="mb-5 rounded-xl border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-secondary-dark">
 
                 {/* SEARCH */}
 
@@ -605,7 +605,7 @@ const Products = () => {
                                 setSearch(e.target.value)
                             }
                             placeholder="Search product..."
-                            className="h-10 w-full rounded-lg border border-gray-200 bg-white pl-10 pr-3 text-sm text-gray-900 outline-none focus:border-gray-400 focus:ring-2 focus:ring-gray-100 dark:border-gray-700 dark:bg-gray-900 dark:text-white dark:focus:border-gray-500 dark:focus:ring-gray-800"
+                            className="h-10 w-full rounded-lg border border-gray-200 bg-white pl-10 pr-3 text-sm text-gray-900 outline-none focus:border-gray-400 focus:ring-2 focus:ring-gray-100 dark:border-gray-700 dark:bg-secondary-dark dark:text-white dark:focus:border-gray-500 dark:focus:ring-gray-800"
                         />
 
                     </div>
@@ -817,7 +817,7 @@ const Products = () => {
           TABLE
       ========================================= */}
 
-            <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900">
+            <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-secondary-dark">
 
                 <div className="overflow-x-auto">
 
@@ -1414,7 +1414,7 @@ const shortId = (id) => {
 // =====================================================
 
 const selectClass =
-    "h-10 w-full rounded-lg border border-gray-200 bg-white px-3 text-sm text-gray-700 outline-none focus:border-gray-400 focus:ring-2 focus:ring-gray-100 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-gray-500 dark:focus:ring-gray-800";
+    "h-10 w-full rounded-lg border border-gray-200 bg-white px-3 text-sm text-gray-700 outline-none focus:border-gray-400 focus:ring-2 focus:ring-gray-100 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-700 dark:bg-secondary-dark dark:text-gray-300 dark:focus:border-gray-500 dark:focus:ring-gray-800";
 
 const thClass =
     "px-4 py-3 text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400";

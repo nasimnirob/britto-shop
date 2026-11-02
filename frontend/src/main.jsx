@@ -17,7 +17,7 @@ createRoot(document.getElementById('root')).render(
       <AuthProviders>
         <CartProvider>
           <SettingsProvider>
-            <div className='max-w-screen- mx-auto bg-primary dark:bg-primary-dark text-[#080809] dark:text-[#E2E5E6] font-inter'>
+            <div className='max-w-screen- mx-auto bg-primary dark:bg-primary-dark text-[#080809] dark:text-[#E2E5E6] font-poppins'>
               <RouterProvider router={Router} />
               <Toaster />
             </div>

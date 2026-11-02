@@ -30,7 +30,7 @@ const MainLayout = () => {
 
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-primary-dark  dark:text-[#E2E5E6] text-black">
+    <div className="min-h-screen flex flex-col bg-[#F2F4F7] dark:bg-primary-dark  dark:text-[#E2E5E6] text-black">
 
       <ScrollManager />
 

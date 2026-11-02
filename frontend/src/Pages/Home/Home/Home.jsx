@@ -16,8 +16,8 @@ const Home = () => {
   // const popularData = data.filter((item) => item.category === "Popular");
   const {products} = useProducts();
   const {categories} = useCategory();
-  console.log(products)
-  console.log(categories)
+  // console.log(products)
+  // console.log(categories)
 
   return (
     <div className="">
@@ -51,7 +51,10 @@ const Home = () => {
           <Cover />
         </div>
       </div>
+      <div  className="relative left-1/2 w-screen -translate-x-1/2 ">
+
           <Footer></Footer>
+      </div>
     </div>
   );
 };

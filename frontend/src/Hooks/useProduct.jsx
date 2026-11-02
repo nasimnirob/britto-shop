@@ -3,12 +3,6 @@ import axios from 'axios';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
-/**
- * Fetches a single product by id — for product detail / edit pages.
- *
- * Usage:
- *   const { product, loading, error, refetch } = useProduct(productId);
- */
 const useProduct = (id) => {
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);

@@ -1,14 +1,22 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ZoomImage from "../ZoomImage";
 import { TbCurrencyTaka } from "react-icons/tb";
 
 const OrderCard = ({ products = [] }) => {
+  const navigate = useNavigate();
   return (
     <div className="mx-0 grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-3 grid-cols-2 gap-3 text-black dark:text-white">
       {products.map((product) => (
-        <Link
+        <div
           key={product._id}
-          to={`/product/${product.slug}`}
+          // to={`/product/${product.slug}`}
+          onClick={() =>
+            navigate(
+              product.isBundle
+                ? `/bundle/${product.slug}`
+                : `/product/${product.slug}`
+            )
+          }
           state={{ product }}
           className="
             card
@@ -164,7 +172,7 @@ const OrderCard = ({ products = [] }) => {
             </div>
 
           </div>
-        </Link>
+        </div>
       ))}
     </div>
   );

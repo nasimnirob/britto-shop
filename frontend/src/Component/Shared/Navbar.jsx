@@ -828,7 +828,7 @@ const Navbar = ({ openCart, setOpenCart, openProfile, setOpenProfile, open, setO
                     <LanguageSelector />
                     <button
                       onClick={toggleTheme}
-                      className="px-1 py-[3.5px] -mt-2 hover:bg-gray-200 dark:hover:bg-gray-700
+                      className="px-1 py-[2px] -mt-2 hover:bg-gray-200 dark:hover:bg-gray-700
                  text-lg flex justify-center items-center text-black
                  hover:text-orange-400 border dark:border-gray-600 rounded-r"
                     >

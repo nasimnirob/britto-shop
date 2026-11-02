@@ -48,6 +48,9 @@ import Settings from "../Dashboard/Pages/Settings";
 import ProductCreate from "../Dashboard/Pages/ProductCreate";
 import ProductEdit from "../Dashboard/Pages/ProductEdit";
 import SizeCharts from "../Dashboard/Pages/SizeCharts";
+import BundleProductCreate from "../Dashboard/Pages/BundleProductCreate";
+import BundleProductDetails from "../Component/Product/BundleProductDetails";
+import BundleProductEdit from "../Dashboard/Pages/BundleProductEdit";
 
 
 const Router = createBrowserRouter([
@@ -93,6 +96,10 @@ const Router = createBrowserRouter([
             {
                 path: "product/:id",
                 element: <ProductDetails />,
+            },
+            {
+                path: "bundle/:id",
+                element: <BundleProductDetails />,
             },
 
             {
@@ -179,22 +186,23 @@ const Router = createBrowserRouter([
                 path: "products/create",
                 element: <ProductCreate />,
             },
-
-            // {
-            //     path: "products/:id",
-            //     element: <ProductDetails />,
-            // },
-
             {
                 path: "products/:id/edit",
                 element: <ProductEdit />,
             },
-
             {
                 path: "bundle-products",
                 element: <BundleProducts />,
             },
-
+            {
+                path: "bundle-products/create",
+                element: <BundleProductCreate />,
+            },
+            {
+                path: "bundle-products/:id/edit",
+                element: <BundleProductEdit />,
+            },
+            
 
             // =========================
             // ORDERS

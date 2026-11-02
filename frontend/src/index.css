@@ -46,8 +46,30 @@
 
 body {
   font-family: 'Poppins', sans-serif;
-  font-size: 18px;
+  font-size: 16px;
 }
+
+.bangla {
+  font-family: "Hind Siliguri", sans-serif;
+}
+
+@font-face {
+  font-family: "Hind Siliguri";
+  src: url("https://fonts.gstatic.com/s/hindsiliguri/v12/ijwTs5juQtsyLLR5jN4cxBEoRDf40qA.woff2") format("woff2");
+  font-weight: 300 700;
+  font-style: normal;
+  font-display: swap;
+  unicode-range:
+    U+0980-09FF,
+    /* Bengali */
+    U+200C-200D,
+    /* Zero width joiner/non-joiner */
+    U+25CC;
+  /* Dotted circle */
+}
+
+
+
 
 /* No Copy Text */
 .no-copy {
@@ -371,3 +393,26 @@ body {
 .category-sidebar .category-scroll-thumb:hover {
     background: #4b5563 !important;
 } */
+
+
+
+/* animation desh border*/
+/* @keyframes slide {
+  from {
+    background-position: 0 0;
+  }
+
+  to {
+    background-position: 4px 0;
+  }
+
+} */
+
+@keyframes slide-ltr {
+  from { background-position: 0 0; }
+  to   { background-position: 4px 0; } 
+}
+@keyframes slide-rtl {
+  from { background-position: 0 0; }
+  to   { background-position: -4px 0; } 
+}

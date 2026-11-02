@@ -34,6 +34,7 @@ let subCategoriesCollection;
 let colorsCollection;
 let sizesCollection;
 let sizeChartsCollection;
+let bundleProductsCollection;
 
 async function run() {
     try {
@@ -50,6 +51,7 @@ async function run() {
         colorsCollection = db.collection("colors");
         sizesCollection = db.collection("sizes");
         sizeChartsCollection = db.collection("sizeCharts");
+        bundleProductsCollection = db.collection("bundleProducts");
     } catch (err) {
         console.error("MongoDB connection failed:", err);
     }
@@ -59,7 +61,6 @@ run();
 
 const escapeRegex = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 const slugToRegex = (value) => new RegExp(`^${escapeRegex(value).replace(/-/g, '[- ]')}$`, 'i');
-// const toSlug = (str) => str.toLowerCase().trim().replace(/\s+/g, '-');
 const toSlug = (str, maxLength = 75) => {
     let slug = String(str || "")
         .toLowerCase()
@@ -368,9 +369,8 @@ const validateProductVariants = async (variants = []) => {
 };
 
 
-// ===============================
-// GET ALL CLOUDINARY MEDIA
-// ===============================
+////////////////////////////// get all cloudinary media //////////////////////////////////////
+
 app.get("/media", async (req, res) => {
     try {
         const limit = Math.min(
@@ -416,7 +416,7 @@ app.get("/media", async (req, res) => {
 });
 
 
-/////////////////////////////////////////// PRODUCTS /////////////////////////////////////////
+/////////////////////////////////////////// products /////////////////////////////////////////
 
 app.get('/products', async (req, res) => {
 
@@ -1429,61 +1429,62 @@ app.patch("/products/:id", async (req, res) => {
         // =====================================================
 
         let sizeChartSnapshot = null;
+        let sizeChartId = null;
 
-        if (
-            product.sizeChartId &&
-            ObjectId.isValid(product.sizeChartId)
-        ) {
-            const chart = await sizeChartsCollection.findOne({
-                _id: new ObjectId(product.sizeChartId),
-                isActive: true,
-            });
+        const hasSizeChartField = Object.prototype.hasOwnProperty.call(
+            product,
+            "sizeChartId"
+        );
 
-            if (chart) {
-                sizeChartSnapshot = {
-                    _id: chart._id,
-                    name: chart.name,
-                    type: chart.type || "image",
-                    image: chart.image || "",
-                    headers: chart.headers || [],
-                    rows: chart.rows || [],
-                    unit: chart.unit || "inch",
-                    description: chart.description || "",
-                };
+        if (hasSizeChartField) {
+
+            if (
+                product.sizeChartId &&
+                ObjectId.isValid(product.sizeChartId)
+            ) {
+                const chart = await sizeChartsCollection.findOne({
+                    _id: new ObjectId(product.sizeChartId),
+                    isActive: true,
+                });
+
+                if (chart) {
+                    sizeChartSnapshot = {
+                        _id: chart._id,
+                        name: chart.name,
+                        type: chart.type || "image",
+                        image: chart.image || "",
+                        headers: chart.headers || [],
+                        rows: chart.rows || [],
+                        unit: chart.unit || "inch",
+                        description: chart.description || "",
+                    };
+                    sizeChartId = chart._id;
+                }
             }
+        } else {
+            sizeChartSnapshot = existingProduct.sizeChart || null;
+            sizeChartId = existingProduct.sizeChartId || null;
         }
 
         const updatedDoc = {
             ...product,
 
             name: product.name.trim(),
-
             slug,
 
-            sizeChartId: sizeChartSnapshot?._id || null,
+            sizeChartId,
             sizeChart: sizeChartSnapshot,
 
             variationType,
-
             variants: normalizedVariants,
-
             totalStock,
 
             price: {
                 mrp: productMRP,
                 sellingPrice: productSellingPrice,
-
-                discountPercent:
-                    Math.round(
-                        (
-                            (
-                                productMRP -
-                                productSellingPrice
-                            ) /
-                            productMRP
-                        ) * 100
-                    ),
-
+                discountPercent: Math.round(
+                    ((productMRP - productSellingPrice) / productMRP) * 100
+                ),
                 currency: "BDT",
             },
 
@@ -1592,7 +1593,1899 @@ app.delete('/products/:id', async (req, res) => {
 });
 
 
-///////////////////////////////////////// COLORS //////////////////////////////////////////////
+
+/////////////////////// bundle product //////////////////////////
+
+// const generateBundleSlug = async (name, excludeId = null) => {
+//     const baseSlug = toSlug(name);
+
+//     let slug = baseSlug;
+//     let counter = 1;
+
+//     while (true) {
+//         const query = { slug };
+
+//         if (excludeId) {
+//             query._id = { $ne: new ObjectId(excludeId) };
+//         }
+
+//         const exists = await bundleProductsCollection.findOne(query);
+
+//         if (!exists) {
+//             return slug;
+//         }
+
+//         slug = `${baseSlug}-${counter++}`;
+//     }
+// };
+
+// const validateBundleProducts = async (products) => {
+//     if (!Array.isArray(products) || products.length === 0) {
+//         throw new Error("At least one product is required");
+//     }
+
+//     const seen = new Set();
+//     const productIds = [];
+
+//     for (const item of products) {
+//         if (!item?.productId) {
+//             throw new Error("Each bundle item must have productId");
+//         }
+
+//         const productId = String(item.productId);
+
+//         if (!ObjectId.isValid(productId)) {
+//             throw new Error(`Invalid productId: ${productId}`);
+//         }
+
+//         if (seen.has(productId)) {
+//             throw new Error("Duplicate products are not allowed");
+//         }
+
+//         seen.add(productId);
+//         productIds.push(new ObjectId(productId));
+
+//         const quantity = Number(item.quantity);
+
+//         if (!Number.isInteger(quantity) || quantity <= 0) {
+//             throw new Error(
+//                 `Invalid quantity for product ${productId}`
+//             );
+//         }
+//     }
+
+//     const sourceProducts = await productsCollection
+//         .find({
+//             _id: { $in: productIds },
+//             isActive: true,
+//         })
+//         .toArray();
+
+//     if (sourceProducts.length !== productIds.length) {
+//         throw new Error(
+//             "One or more selected products were not found or are inactive"
+//         );
+//     }
+
+//     return sourceProducts;
+// };
+
+// app.post("/bundle-products", async (req, res) => {
+//     try {
+//         const {
+//             name,
+//             thumbnail,
+//             images = [],
+//             description = "",
+//             products,
+//             price,
+//         } = req.body;
+
+//         if (!name?.trim()) {
+//             return res.status(400).json({
+//                 message: "Bundle name is required",
+//             });
+//         }
+
+//         if (!thumbnail?.trim()) {
+//             return res.status(400).json({
+//                 message: "Bundle thumbnail is required",
+//             });
+//         }
+
+//         const sellingPrice = Number(price?.sellingPrice);
+
+//         if (!Number.isFinite(sellingPrice) || sellingPrice <= 0) {
+//             return res.status(400).json({
+//                 message: "Valid bundle selling price is required",
+//             });
+//         }
+
+//         const sourceProducts = await validateBundleProducts(products);
+
+//         const sourceMap = new Map(
+//             sourceProducts.map((product) => [
+//                 String(product._id),
+//                 product,
+//             ])
+//         );
+
+//         let originalValue = 0;
+
+//         for (const item of products) {
+//             const product = sourceMap.get(String(item.productId));
+
+//             originalValue +=
+//                 Number(product.price?.sellingPrice || 0) *
+//                 Number(item.quantity);
+//         }
+
+//         if (sellingPrice >= originalValue) {
+//             return res.status(400).json({
+//                 message:
+//                     "Bundle selling price must be lower than the current product value",
+//                 originalValue,
+//             });
+//         }
+
+//         const slug = await generateBundleSlug(name);
+
+//         const bundleProducts = products.map((item) => ({
+//             productId: new ObjectId(item.productId),
+//             quantity: Number(item.quantity),
+//         }));
+
+//         const bundle = {
+//             name: name.trim(),
+//             slug,
+
+//             thumbnail: thumbnail.trim(),
+
+//             images: Array.isArray(images)
+//                 ? images
+//                     .map((image) => String(image).trim())
+//                     .filter(Boolean)
+//                 : [],
+
+//             description: description?.trim() || "",
+
+//             products: bundleProducts,
+
+//             price: {
+//                 sellingPrice,
+//                 currency: "BDT",
+//             },
+
+//             isActive: true,
+
+//             createdAt: new Date(),
+//             updatedAt: new Date(),
+//         };
+
+//         const result =
+//             await bundleProductsCollection.insertOne(bundle);
+
+//         res.status(201).json({
+//             message: "Bundle product created successfully",
+//             bundleId: result.insertedId,
+//         });
+//     } catch (error) {
+//         console.error("Create bundle error:", error);
+
+//         res.status(500).json({
+//             message: error.message || "Failed to create bundle",
+//         });
+//     }
+// });
+
+// app.get("/bundle-products", async (req, res) => {
+//     try {
+//         const {
+//             search = "",
+//             isActive = "true",
+//             page = 1,
+//             limit = 10,
+//         } = req.query;
+
+//         const currentPage = Math.max(Number(page) || 1, 1);
+//         const perPage = Math.min(Math.max(Number(limit) || 10, 1), 100);
+
+//         // ----------------------------------------------------------
+//         // 1. Build bundle filter
+//         // ----------------------------------------------------------
+//         const bundleFilter = {};
+
+//         if (isActive === "true") {
+//             bundleFilter.isActive = true;
+//         } else if (isActive === "false") {
+//             bundleFilter.isActive = false;
+//         }
+
+//         if (search.trim()) {
+//             const searchRegex = new RegExp(search.trim(), "i");
+
+//             bundleFilter.$or = [
+//                 { name: searchRegex },
+//                 { slug: searchRegex },
+//             ];
+//         }
+
+//         // ----------------------------------------------------------
+//         // 2. Get total count
+//         // ----------------------------------------------------------
+//         const total = await bundleProductsCollection.countDocuments(
+//             bundleFilter
+//         );
+
+//         const totalPages = Math.ceil(total / perPage);
+
+//         // ----------------------------------------------------------
+//         // 3. Get bundle documents
+//         // ----------------------------------------------------------
+//         const bundles = await bundleProductsCollection
+//             .find(bundleFilter)
+//             .sort({ createdAt: -1 })
+//             .skip((currentPage - 1) * perPage)
+//             .limit(perPage)
+//             .toArray();
+
+//         // ----------------------------------------------------------
+//         // 4. Collect all source product IDs
+//         // ----------------------------------------------------------
+//         const productIds = [];
+
+//         for (const bundle of bundles) {
+//             for (const item of bundle.products || []) {
+//                 if (item.productId) {
+//                     productIds.push(item.productId);
+//                 }
+//             }
+//         }
+
+//         // Remove duplicate IDs
+//         const uniqueProductIds = [
+//             ...new Map(
+//                 productIds.map((id) => [String(id), id])
+//             ).values(),
+//         ];
+
+//         // ----------------------------------------------------------
+//         // 5. Get current/live products
+//         // ----------------------------------------------------------
+//         const sourceProducts =
+//             uniqueProductIds.length > 0
+//                 ? await productsCollection
+//                     .find({
+//                         _id: { $in: uniqueProductIds },
+//                     })
+//                     .toArray()
+//                 : [];
+
+//         // ----------------------------------------------------------
+//         // 6. Create quick product lookup
+//         // ----------------------------------------------------------
+//         const productMap = new Map(
+//             sourceProducts.map((product) => [
+//                 String(product._id),
+//                 product,
+//             ])
+//         );
+
+//         // ----------------------------------------------------------
+//         // 7. Build response
+//         // ----------------------------------------------------------
+//         const formattedBundles = bundles.map((bundle) => {
+//             let originalValue = 0;
+//             let totalStock = Infinity;
+
+//             const products = (bundle.products || []).map((item) => {
+//                 const product = productMap.get(
+//                     String(item.productId)
+//                 );
+
+//                 // Source product deleted/not found
+//                 if (!product) {
+//                     return {
+//                         productId: item.productId,
+//                         quantity: item.quantity,
+//                         product: null,
+//                     };
+//                 }
+
+//                 // ------------------------------------------------------
+//                 // Current product selling price
+//                 // ------------------------------------------------------
+//                 const sellingPrice =
+//                     Number(product?.price?.sellingPrice) || 0;
+
+//                 // Add current source product value
+//                 originalValue +=
+//                     sellingPrice * Number(item.quantity || 1);
+
+//                 // ------------------------------------------------------
+//                 // Calculate available bundle stock
+//                 //
+//                 // Example:
+//                 // Product A = 10 stock, quantity = 1
+//                 // Product B = 6 stock, quantity = 2
+//                 //
+//                 // Bundle stock:
+//                 // A = 10 / 1 = 10
+//                 // B = 6 / 2 = 3
+//                 //
+//                 // Final bundle stock = 3
+//                 // ------------------------------------------------------
+//                 const sourceStock =
+//                     Number(product?.totalStock) || 0;
+
+//                 const requiredQuantity =
+//                     Number(item.quantity) || 1;
+
+//                 const possibleBundles = Math.floor(
+//                     sourceStock / requiredQuantity
+//                 );
+
+//                 totalStock = Math.min(
+//                     totalStock,
+//                     possibleBundles
+//                 );
+
+//                 return {
+//                     productId: item.productId,
+//                     quantity: requiredQuantity,
+
+//                     product: {
+//                         _id: product._id,
+//                         name: product.name,
+//                         slug: product.slug,
+//                         thumbnail: product.thumbnail,
+
+//                         price: {
+//                             sellingPrice,
+//                         },
+
+//                         totalStock: sourceStock,
+
+//                         isActive:
+//                             product.isActive !== false,
+//                     },
+//                 };
+//             });
+
+//             // --------------------------------------------------------
+//             // Bundle selling price
+//             // --------------------------------------------------------
+//             const bundleSellingPrice =
+//                 Number(bundle?.price?.sellingPrice) || 0;
+
+//             // --------------------------------------------------------
+//             // Calculate savings
+//             // --------------------------------------------------------
+//             const savings = Math.max(
+//                 originalValue - bundleSellingPrice,
+//                 0
+//             );
+
+//             // --------------------------------------------------------
+//             // Calculate discount percentage
+//             // --------------------------------------------------------
+//             const discountPercent =
+//                 originalValue > 0
+//                     ? Math.round(
+//                         (savings / originalValue) * 100
+//                     )
+//                     : 0;
+
+//             // If bundle has no products
+//             if (totalStock === Infinity) {
+//                 totalStock = 0;
+//             }
+
+//             return {
+//                 ...bundle,
+
+//                 // Keep original stored fields if needed
+//                 products,
+
+//                 // Live calculated pricing
+//                 pricing: {
+//                     originalValue,
+//                     sellingPrice: bundleSellingPrice,
+//                     savings,
+//                     discountPercent,
+//                     currency:
+//                         bundle?.price?.currency || "BDT",
+//                 },
+
+//                 // Live calculated stock
+//                 totalStock,
+//             };
+//         });
+
+//         // ----------------------------------------------------------
+//         // 8. Response
+//         // ----------------------------------------------------------
+//         res.status(200).json({
+//             success: true,
+
+//             bundles: formattedBundles,
+
+//             pagination: {
+//                 total,
+//                 page: currentPage,
+//                 limit: perPage,
+//                 totalPages,
+//             },
+
+//             // Keep these too because frontend may directly use them
+//             total,
+//             page: currentPage,
+//             limit: perPage,
+//             totalPages,
+//         });
+//     } catch (error) {
+//         console.error(
+//             "GET /bundle-products error:",
+//             error
+//         );
+
+//         res.status(500).json({
+//             success: false,
+//             message: "Failed to fetch bundle products",
+//             error: error.message,
+//         });
+//     }
+// });
+
+// app.get("/bundle-products/:id", async (req, res) => {
+//     try {
+//         const { id } = req.params;
+
+//         if (!ObjectId.isValid(id)) {
+//             return res.status(400).send({
+//                 success: false,
+//                 message: "Invalid bundle id",
+//             });
+//         }
+
+//         const bundle = await bundleProductsCollection.findOne({
+//             _id: new ObjectId(id),
+//         });
+
+//         if (!bundle) {
+//             return res.status(404).send({
+//                 success: false,
+//                 message: "Bundle product not found",
+//             });
+//         }
+
+//         const productIds = bundle.products.map(
+//             (item) => item.productId
+//         );
+
+//         const products = await productsCollection
+//             .find({
+//                 _id: { $in: productIds },
+//             })
+//             .project({
+//                 name: 1,
+//                 slug: 1,
+//                 thumbnail: 1,
+//                 images: 1,
+//                 description: 1,
+
+//                 variationType: 1,
+//                 variants: 1,
+
+//                 price: 1,
+//                 totalStock: 1,
+
+//                 isActive: 1,
+
+//                 sizeChartId: 1,
+//                 sizeChart: 1,
+//             })
+//             .toArray();
+
+//         const productMap = new Map(
+//             products.map((product) => [
+//                 String(product._id),
+//                 product,
+//             ])
+//         );
+
+//         const bundleProducts = bundle.products.map((item) => {
+//             const product = productMap.get(
+//                 String(item.productId)
+//             );
+
+//             return {
+//                 productId: item.productId,
+//                 quantity: item.quantity,
+
+//                 product: product || null,
+//             };
+//         });
+
+//         /*
+//         |--------------------------------------------------------------------------
+//         | Base original value
+//         |--------------------------------------------------------------------------
+//         */
+
+//         const originalValue = bundleProducts.reduce(
+//             (total, item) => {
+//                 const sellingPrice =
+//                     Number(
+//                         item.product?.price?.sellingPrice
+//                     ) || 0;
+
+//                 return (
+//                     total +
+//                     sellingPrice * Number(item.quantity || 1)
+//                 );
+//             },
+//             0
+//         );
+
+//         const bundleSellingPrice =
+//             Number(bundle.price?.sellingPrice) || 0;
+
+//         const savings = Math.max(
+//             0,
+//             originalValue - bundleSellingPrice
+//         );
+
+//         const discountPercent =
+//             originalValue > 0
+//                 ? Math.round(
+//                     (savings / originalValue) * 100
+//                 )
+//                 : 0;
+
+//         res.send({
+//             success: true,
+
+//             bundle: {
+//                 ...bundle,
+
+//                 products: bundleProducts,
+
+//                 pricing: {
+//                     originalValue,
+//                     sellingPrice: bundleSellingPrice,
+//                     savings,
+//                     discountPercent,
+//                     currency: "BDT",
+//                 },
+//             },
+//         });
+
+//     } catch (err) {
+//         console.error(
+//             "Bundle details error:",
+//             err
+//         );
+
+//         res.status(500).send({
+//             success: false,
+//             message: "Failed to fetch bundle product",
+//             error: err.message,
+//         });
+//     }
+// });
+
+// app.patch("/bundle-products/:id",
+//     async (req, res) => {
+//         try {
+//             const { id } = req.params;
+
+//             if (!ObjectId.isValid(id)) {
+//                 return res.status(400).json({
+//                     message:
+//                         "Invalid bundle ID",
+//                 });
+//             }
+
+//             const existingBundle =
+//                 await bundleProductsCollection.findOne({
+//                     _id: new ObjectId(id),
+//                 });
+
+//             if (!existingBundle) {
+//                 return res.status(404).json({
+//                     message:
+//                         "Bundle product not found",
+//                 });
+//             }
+
+//             const {
+//                 name,
+//                 thumbnail,
+//                 images,
+//                 description,
+//                 products,
+//                 price,
+//                 isActive,
+//             } = req.body;
+
+//             // ------------------------------------------------------
+//             // Name
+//             // ------------------------------------------------------
+
+//             if (
+//                 !name ||
+//                 typeof name !== "string" ||
+//                 !name.trim()
+//             ) {
+//                 return res.status(400).json({
+//                     message:
+//                         "Bundle name is required",
+//                 });
+//             }
+
+//             // ------------------------------------------------------
+//             // Thumbnail
+//             // ------------------------------------------------------
+
+//             if (
+//                 !thumbnail ||
+//                 typeof thumbnail !== "string"
+//             ) {
+//                 return res.status(400).json({
+//                     message:
+//                         "Bundle thumbnail is required",
+//                 });
+//             }
+
+//             // ------------------------------------------------------
+//             // Price
+//             // ------------------------------------------------------
+
+//             const mrp = Number(
+//                 price?.mrp
+//             );
+
+//             const sellingPrice = Number(
+//                 price?.sellingPrice
+//             );
+
+//             if (
+//                 !Number.isFinite(mrp) ||
+//                 mrp < 0
+//             ) {
+//                 return res.status(400).json({
+//                     message:
+//                         "Invalid MRP",
+//                 });
+//             }
+
+//             if (
+//                 !Number.isFinite(sellingPrice) ||
+//                 sellingPrice <= 0
+//             ) {
+//                 return res.status(400).json({
+//                     message:
+//                         "Invalid selling price",
+//                 });
+//             }
+
+//             if (mrp > 0 && sellingPrice > mrp) {
+//                 return res.status(400).json({
+//                     message:
+//                         "Selling price cannot be greater than MRP",
+//                 });
+//             }
+
+//             // ------------------------------------------------------
+//             // Products
+//             // ------------------------------------------------------
+
+//             const normalizedProducts =
+//                 await validateBundleProducts(
+//                     products
+//                 );
+
+//             // ------------------------------------------------------
+//             // Slug
+//             // ------------------------------------------------------
+
+//             let slug =
+//                 existingBundle.slug;
+
+//             if (
+//                 existingBundle.name.trim() !==
+//                 name.trim()
+//             ) {
+//                 slug =
+//                     await generateBundleSlug(
+//                         name,
+//                         id
+//                     );
+//             }
+
+//             // ------------------------------------------------------
+//             // Discount
+//             // ------------------------------------------------------
+
+//             const discountPercent =
+//                 calculateDiscountPercent(
+//                     mrp,
+//                     sellingPrice
+//                 );
+
+//             // ------------------------------------------------------
+//             // Stock
+//             // ------------------------------------------------------
+
+//             const totalStock =
+//                 Math.min(
+//                     ...normalizedProducts.map(
+//                         (item) =>
+//                             Math.floor(
+//                                 item.stock /
+//                                 item.quantity
+//                             )
+//                     )
+//                 );
+
+//             // ------------------------------------------------------
+//             // Update
+//             // ------------------------------------------------------
+
+//             const updateData = {
+//                 name: name.trim(),
+
+//                 slug,
+
+//                 thumbnail:
+//                     thumbnail.trim(),
+
+//                 images: Array.isArray(images)
+//                     ? images
+//                         .map((image) =>
+//                             String(image).trim()
+//                         )
+//                         .filter(Boolean)
+//                     : [],
+
+//                 description:
+//                     typeof description === "string"
+//                         ? description.trim()
+//                         : "",
+
+//                 products:
+//                     normalizedProducts.map(
+//                         ({
+//                             productId,
+//                             quantity,
+//                         }) => ({
+//                             productId,
+//                             quantity,
+//                         })
+//                     ),
+
+//                 price: {
+//                     mrp,
+//                     sellingPrice,
+//                     discountPercent,
+//                     currency: "BDT",
+//                 },
+
+//                 totalStock,
+
+//                 isActive:
+//                     typeof isActive === "boolean"
+//                         ? isActive
+//                         : existingBundle.isActive,
+
+//                 updatedAt: new Date(),
+//             };
+
+//             await bundleProductsCollection.updateOne(
+//                 {
+//                     _id: new ObjectId(id),
+//                 },
+//                 {
+//                     $set: updateData,
+//                 }
+//             );
+
+//             const updatedBundle =
+//                 await bundleProductsCollection.findOne({
+//                     _id: new ObjectId(id),
+//                 });
+
+//             res.json({
+//                 message:
+//                     "Bundle product updated successfully",
+
+//                 bundle: updatedBundle,
+//             });
+//         } catch (error) {
+//             console.error(
+//                 "Update bundle error:",
+//                 error
+//             );
+
+//             res.status(500).json({
+//                 message:
+//                     error.message ||
+//                     "Failed to update bundle product",
+//             });
+//         }
+//     }
+// );
+
+// app.delete("/bundle-products/:id",
+//     async (req, res) => {
+//         try {
+//             const { id } = req.params;
+
+//             if (!ObjectId.isValid(id)) {
+//                 return res.status(400).json({
+//                     message:
+//                         "Invalid bundle ID",
+//                 });
+//             }
+
+//             const result =
+//                 await bundleProductsCollection.updateOne(
+//                     {
+//                         _id: new ObjectId(id),
+//                     },
+//                     {
+//                         $set: {
+//                             isActive: false,
+//                             updatedAt: new Date(),
+//                         },
+//                     }
+//                 );
+
+//             if (
+//                 result.matchedCount === 0
+//             ) {
+//                 return res.status(404).json({
+//                     message:
+//                         "Bundle product not found",
+//                 });
+//             }
+
+//             res.json({
+//                 message:
+//                     "Bundle product deactivated successfully",
+//             });
+//         } catch (error) {
+//             console.error(
+//                 "Delete bundle error:",
+//                 error
+//             );
+
+//             res.status(500).json({
+//                 message:
+//                     "Failed to deactivate bundle product",
+//             });
+//         }
+//     }
+// );
+
+// ═══════════════════════════════════════════════════════════════
+// BUNDLE PRODUCTS
+// ═══════════════════════════════════════════════════════════════
+
+const generateBundleSlug = async (name, excludeId = null) => {
+    const baseSlug = toSlug(name);
+
+    let slug = baseSlug;
+    let counter = 1;
+
+    while (true) {
+        const query = { slug };
+
+        if (excludeId) {
+            query._id = { $ne: new ObjectId(excludeId) };
+        }
+
+        const exists = await bundleProductsCollection.findOne(query);
+
+        if (!exists) {
+            return slug;
+        }
+
+        slug = `${baseSlug}-${counter++}`;
+    }
+};
+
+const validateBundleProducts = async (products) => {
+    if (!Array.isArray(products) || products.length === 0) {
+        throw new Error("At least one product is required");
+    }
+
+    const seen = new Set();
+    const productIds = [];
+
+    for (const item of products) {
+        if (!item?.productId) {
+            throw new Error("Each bundle item must have productId");
+        }
+
+        const productId = String(item.productId);
+
+        if (!ObjectId.isValid(productId)) {
+            throw new Error(`Invalid productId: ${productId}`);
+        }
+
+        if (seen.has(productId)) {
+            throw new Error("Duplicate products are not allowed");
+        }
+
+        seen.add(productId);
+        productIds.push(new ObjectId(productId));
+
+        const quantity = Number(item.quantity);
+
+        if (!Number.isInteger(quantity) || quantity <= 0) {
+            throw new Error(`Invalid quantity for product ${productId}`);
+        }
+    }
+
+    const sourceProducts = await productsCollection
+        .find({
+            _id: { $in: productIds },
+            isActive: true,
+        })
+        .toArray();
+
+    if (sourceProducts.length !== productIds.length) {
+        throw new Error(
+            "One or more selected products were not found or are inactive"
+        );
+    }
+
+    return sourceProducts;
+};
+
+app.post("/bundle-products", async (req, res) => {
+    try {
+        const {
+            name,
+            thumbnail,
+            images = [],
+            description = "",
+            products,
+            price,
+            productTypeId,
+            categoryId,
+            subCategoryId,
+        } = req.body;
+
+        if (!name?.trim()) {
+            return res.status(400).json({
+                message: "Bundle name is required",
+            });
+        }
+
+        // ✅ NEW: Validate category hierarchy (optional but recommended)
+        let productTypeObjectId = null;
+        let categoryObjectId = null;
+        let subCategoryObjectId = null;
+
+        if (productTypeId || categoryId || subCategoryId) {
+            if (!productTypeId || !categoryId || !subCategoryId) {
+                return res.status(400).json({
+                    message: "productTypeId, categoryId and subCategoryId are all required if category is provided",
+                });
+            }
+
+            const validation = await validateProductHierarchy({
+                productTypeId,
+                categoryId,
+                subCategoryId,
+            });
+
+            if (!validation.valid) {
+                return res.status(400).json({
+                    message: validation.message,
+                });
+            }
+
+            productTypeObjectId = validation.productTypeObjectId;
+            categoryObjectId = validation.categoryObjectId;
+            subCategoryObjectId = validation.subCategoryObjectId;
+        }
+
+        if (!thumbnail?.trim()) {
+            return res.status(400).json({
+                message: "Bundle thumbnail is required",
+            });
+        }
+
+        const sellingPrice = Number(price?.sellingPrice);
+
+        if (!Number.isFinite(sellingPrice) || sellingPrice <= 0) {
+            return res.status(400).json({
+                message: "Valid bundle selling price is required",
+            });
+        }
+
+        const sourceProducts = await validateBundleProducts(products);
+
+        const sourceMap = new Map(
+            sourceProducts.map((product) => [
+                String(product._id),
+                product,
+            ])
+        );
+
+        let originalValue = 0;
+
+        for (const item of products) {
+            const product = sourceMap.get(String(item.productId));
+
+            originalValue +=
+                Number(product.price?.sellingPrice || 0) *
+                Number(item.quantity);
+        }
+
+        if (sellingPrice >= originalValue) {
+            return res.status(400).json({
+                message:
+                    "Bundle selling price must be lower than the current product value",
+                originalValue,
+            });
+        }
+
+        const slug = await generateBundleSlug(name);
+
+        // ✅ Custom name সহ bundle products
+        const bundleProducts = products.map((item) => ({
+            productId: new ObjectId(item.productId),
+            quantity: Number(item.quantity),
+
+            // Custom name (admin চাইলে দেবে, না দিলে null)
+            customName: item.customName?.trim() || null,
+        }));
+
+        const bundle = {
+            name: name.trim(),
+            slug,
+
+            thumbnail: thumbnail.trim(),
+
+            images: Array.isArray(images)
+                ? images
+                    .map((image) => String(image).trim())
+                    .filter(Boolean)
+                : [],
+
+            description: description?.trim() || "",
+
+            // ✅ NEW: Category references
+            productTypeId: productTypeObjectId,
+            categoryId: categoryObjectId,
+            subCategoryId: subCategoryObjectId,
+
+            products: bundleProducts,
+
+            price: {
+                sellingPrice,
+                currency: "BDT",
+            },
+
+            isActive: true,
+
+            createdAt: new Date(),
+            updatedAt: new Date(),
+        };
+
+        const result = await bundleProductsCollection.insertOne(bundle);
+
+        res.status(201).json({
+            message: "Bundle product created successfully",
+            bundleId: result.insertedId,
+        });
+    } catch (error) {
+        console.error("Create bundle error:", error);
+
+        res.status(500).json({
+            message: error.message || "Failed to create bundle",
+        });
+    }
+});
+
+app.get("/bundle-products", async (req, res) => {
+    try {
+        const {
+            search = "",
+            isActive = "true",
+            page = 1,
+            limit = 10,
+            productTypeId,
+            categoryId,
+            subCategoryId,
+        } = req.query;
+
+        const currentPage = Math.max(Number(page) || 1, 1);
+        const perPage = Math.min(Math.max(Number(limit) || 10, 1), 100);
+
+        const bundleFilter = {};
+
+        if (isActive === "true") {
+            bundleFilter.isActive = true;
+        } else if (isActive === "false") {
+            bundleFilter.isActive = false;
+        }
+
+        if (search.trim()) {
+            const escaped = search
+                .trim()
+                .replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+            const searchRegex = new RegExp(escaped, "i");
+
+            bundleFilter.$or = [
+                { name: searchRegex },
+                { slug: searchRegex },
+            ];
+        }
+
+        // NEW: Category filters
+        if (productTypeId && ObjectId.isValid(productTypeId)) {
+            bundleFilter.productTypeId = new ObjectId(productTypeId);
+        }
+
+        if (categoryId && ObjectId.isValid(categoryId)) {
+            bundleFilter.categoryId = new ObjectId(categoryId);
+        }
+
+        if (subCategoryId && ObjectId.isValid(subCategoryId)) {
+            bundleFilter.subCategoryId = new ObjectId(subCategoryId);
+        }
+
+        const total = await bundleProductsCollection.countDocuments(
+            bundleFilter
+        );
+
+        const totalPages = Math.ceil(total / perPage);
+
+        const bundles = await bundleProductsCollection
+            .find(bundleFilter)
+            .sort({ createdAt: -1 })
+            .skip((currentPage - 1) * perPage)
+            .limit(perPage)
+            .toArray();
+
+        // Collect product ids
+        const productIds = [];
+
+        for (const bundle of bundles) {
+            for (const item of bundle.products || []) {
+                if (item.productId) {
+                    productIds.push(item.productId);
+                }
+            }
+        }
+
+        const uniqueProductIds = [
+            ...new Map(
+                productIds.map((id) => [String(id), id])
+            ).values(),
+        ];
+
+        const sourceProducts =
+            uniqueProductIds.length > 0
+                ? await productsCollection
+                    .find({
+                        _id: { $in: uniqueProductIds },
+                    })
+                    .toArray()
+                : [];
+
+        const productMap = new Map(
+            sourceProducts.map((product) => [
+                String(product._id),
+                product,
+            ])
+        );
+
+        const formattedBundles = bundles.map((bundle) => {
+            let originalValue = 0;
+            let totalStock = Infinity;
+
+            const products = (bundle.products || []).map((item) => {
+                const product = productMap.get(String(item.productId));
+
+                if (!product) {
+                    return {
+                        productId: item.productId,
+                        quantity: item.quantity,
+
+                        // ✅ Custom name pass through
+                        customName: item.customName || null,
+                        displayName:
+                            item.customName || "Product unavailable",
+
+                        product: null,
+                    };
+                }
+
+                const sellingPrice =
+                    Number(product?.price?.sellingPrice) || 0;
+
+                originalValue +=
+                    sellingPrice * Number(item.quantity || 1);
+
+                const sourceStock = Number(product?.totalStock) || 0;
+                const requiredQuantity = Number(item.quantity) || 1;
+
+                const possibleBundles = Math.floor(
+                    sourceStock / requiredQuantity
+                );
+
+                totalStock = Math.min(totalStock, possibleBundles);
+
+                return {
+                    productId: item.productId,
+                    quantity: requiredQuantity,
+
+                    // ✅ Custom name + display name
+                    customName: item.customName || null,
+                    displayName: item.customName || product.name,
+
+                    product: {
+                        _id: product._id,
+                        name: product.name,
+                        slug: product.slug,
+                        thumbnail: product.thumbnail,
+
+                        price: {
+                            sellingPrice,
+                        },
+
+                        totalStock: sourceStock,
+
+                        isActive: product.isActive !== false,
+                    },
+                };
+            });
+
+            const bundleSellingPrice =
+                Number(bundle?.price?.sellingPrice) || 0;
+
+            const savings = Math.max(
+                originalValue - bundleSellingPrice,
+                0
+            );
+
+            const discountPercent =
+                originalValue > 0
+                    ? Math.round((savings / originalValue) * 100)
+                    : 0;
+
+            if (totalStock === Infinity) {
+                totalStock = 0;
+            }
+
+            return {
+                ...bundle,
+                products,
+
+                pricing: {
+                    originalValue,
+                    sellingPrice: bundleSellingPrice,
+                    savings,
+                    discountPercent,
+                    currency: bundle?.price?.currency || "BDT",
+                },
+
+                totalStock,
+            };
+        });
+
+        res.status(200).json({
+            success: true,
+            bundles: formattedBundles,
+            pagination: {
+                total,
+                page: currentPage,
+                limit: perPage,
+                totalPages,
+            },
+            total,
+            page: currentPage,
+            limit: perPage,
+            totalPages,
+        });
+    } catch (error) {
+        console.error("GET /bundle-products error:", error);
+
+        res.status(500).json({
+            success: false,
+            message: "Failed to fetch bundle products",
+            error: error.message,
+        });
+    }
+});
+
+app.get("/bundle-products/slug/:slug", async (req, res) => {
+    try {
+        const { slug } = req.params;
+
+        if (!slug?.trim()) {
+            return res.status(400).json({
+                success: false,
+                message: "Slug is required",
+            });
+        }
+
+        // ✅ Direct slug দিয়ে bundle খুঁজি (1st DB hit)
+        const bundle = await bundleProductsCollection.findOne({
+            slug: slug.trim().toLowerCase(),
+        });
+
+        if (!bundle) {
+            return res.status(404).json({
+                success: false,
+                message: "Bundle not found",
+            });
+        }
+
+        const productIds = bundle.products.map((item) => item.productId);
+
+        // ✅ Parallel fetch: products, colors, sizes একসাথে
+        const [products, allColors, allSizes] = await Promise.all([
+            productsCollection
+                .find({ _id: { $in: productIds } })
+                .project({
+                    name: 1,
+                    slug: 1,
+                    thumbnail: 1,
+                    images: 1,
+                    description: 1,
+                    variationType: 1,
+                    variants: 1,
+                    price: 1,
+                    totalStock: 1,
+                    isActive: 1,
+                    sizeChartId: 1,
+                    sizeChart: 1,
+                })
+                .toArray(),
+
+            // Colors + Sizes parallel এ আনছি (cache-able collection)
+            colorsCollection.find({}).toArray(),
+            sizesCollection.find({}).toArray(),
+        ]);
+
+        // ✅ Color/Size map বানাই
+        const colorMap = new Map(
+            allColors.map((c) => [String(c._id), c])
+        );
+        const sizeMap = new Map(
+            allSizes.map((s) => [String(s._id), s])
+        );
+
+        const productMap = new Map(
+            products.map((p) => [String(p._id), p])
+        );
+
+        // ✅ Enrich bundle products
+        const bundleProducts = bundle.products.map((item) => {
+            const product = productMap.get(String(item.productId));
+
+            let enrichedProduct = null;
+
+            if (product) {
+                enrichedProduct = {
+                    ...product,
+                    variants: (product.variants || []).map((variant) => ({
+                        ...variant,
+                        color: variant.colorId
+                            ? colorMap.get(String(variant.colorId)) || null
+                            : null,
+                        sizes: (variant.sizes || []).map((size) => ({
+                            ...size,
+                            size: size.sizeId
+                                ? sizeMap.get(String(size.sizeId)) || null
+                                : null,
+                        })),
+                    })),
+                };
+            }
+
+            return {
+                productId: item.productId,
+                quantity: item.quantity,
+                customName: item.customName || null,
+                displayName:
+                    item.customName ||
+                    product?.name ||
+                    "Product unavailable",
+                product: enrichedProduct,
+            };
+        });
+
+        // Pricing
+        const originalValue = bundleProducts.reduce((total, item) => {
+            const sellingPrice =
+                Number(item.product?.price?.sellingPrice) || 0;
+            return total + sellingPrice * Number(item.quantity || 1);
+        }, 0);
+
+        const bundleSellingPrice =
+            Number(bundle.price?.sellingPrice) || 0;
+
+        const savings = Math.max(0, originalValue - bundleSellingPrice);
+
+        const discountPercent =
+            originalValue > 0
+                ? Math.round((savings / originalValue) * 100)
+                : 0;
+
+        // ✅ Category info (optional, very light)
+        const [productType, category, subCategory] = await Promise.all([
+            bundle.productTypeId
+                ? productTypesCollection.findOne({
+                    _id: bundle.productTypeId,
+                })
+                : null,
+            bundle.categoryId
+                ? categoriesCollection.findOne({
+                    _id: bundle.categoryId,
+                })
+                : null,
+            bundle.subCategoryId
+                ? subCategoriesCollection.findOne({
+                    _id: bundle.subCategoryId,
+                })
+                : null,
+        ]);
+
+        res.json({
+            success: true,
+            bundle: {
+                ...bundle,
+                products: bundleProducts,
+                productType: productType || null,
+                category: category || null,
+                subCategory: subCategory || null,
+                pricing: {
+                    originalValue,
+                    sellingPrice: bundleSellingPrice,
+                    savings,
+                    discountPercent,
+                    currency: "BDT",
+                },
+            },
+        });
+    } catch (err) {
+        console.error("Bundle by slug error:", err);
+        res.status(500).json({
+            success: false,
+            message: "Failed to fetch bundle",
+            error: err.message,
+        });
+    }
+});
+
+app.get("/bundle-products/:id", async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        if (!ObjectId.isValid(id)) {
+            return res.status(400).send({
+                success: false,
+                message: "Invalid bundle id",
+            });
+        }
+
+        const bundle = await bundleProductsCollection.findOne({
+            _id: new ObjectId(id),
+        });
+
+        if (!bundle) {
+            return res.status(404).send({
+                success: false,
+                message: "Bundle product not found",
+            });
+        }
+
+        // NEW: Fetch category info
+        let productType = null;
+        let category = null;
+        let subCategory = null;
+
+        if (bundle.productTypeId) {
+            productType = await productTypesCollection.findOne({
+                _id: bundle.productTypeId,
+            });
+        }
+
+        if (bundle.categoryId) {
+            category = await categoriesCollection.findOne({
+                _id: bundle.categoryId,
+            });
+        }
+
+        if (bundle.subCategoryId) {
+            subCategory = await subCategoriesCollection.findOne({
+                _id: bundle.subCategoryId,
+            });
+        }
+
+        const productIds = bundle.products.map((item) => item.productId);
+
+        // ✅ Full product fetch (variants + size chart সহ)
+        const products = await productsCollection
+            .find({ _id: { $in: productIds } })
+            .project({
+                name: 1,
+                slug: 1,
+                thumbnail: 1,
+                images: 1,
+                description: 1,
+
+                variationType: 1,
+                variants: 1,
+
+                price: 1,
+                totalStock: 1,
+
+                isActive: 1,
+
+                sizeChartId: 1,
+                sizeChart: 1,
+            })
+            .toArray();
+
+        // ✅ Collect all color & size ids from variants (for enrichment)
+        const allColorIds = [];
+        const allSizeIds = [];
+
+        for (const product of products) {
+            for (const variant of product.variants || []) {
+                if (variant.colorId) allColorIds.push(variant.colorId);
+
+                for (const size of variant.sizes || []) {
+                    if (size.sizeId) allSizeIds.push(size.sizeId);
+                }
+            }
+        }
+
+        const uniqueColorIds = [
+            ...new Map(
+                allColorIds.map((i) => [String(i), i])
+            ).values(),
+        ];
+
+        const uniqueSizeIds = [
+            ...new Map(
+                allSizeIds.map((i) => [String(i), i])
+            ).values(),
+        ];
+
+        // ✅ Fetch colors & sizes
+        const colors = uniqueColorIds.length
+            ? await colorsCollection
+                .find({ _id: { $in: uniqueColorIds } })
+                .toArray()
+            : [];
+
+        const sizes = uniqueSizeIds.length
+            ? await sizesCollection
+                .find({ _id: { $in: uniqueSizeIds } })
+                .toArray()
+            : [];
+
+        const colorMap = new Map(
+            colors.map((c) => [String(c._id), c])
+        );
+        const sizeMap = new Map(
+            sizes.map((s) => [String(s._id), s])
+        );
+
+        const productMap = new Map(
+            products.map((product) => [String(product._id), product])
+        );
+
+        // ✅ Enrich bundle products
+        const bundleProducts = bundle.products.map((item) => {
+            const product = productMap.get(String(item.productId));
+
+            let enrichedProduct = null;
+
+            if (product) {
+                enrichedProduct = {
+                    ...product,
+
+                    // ✅ Enrich variants with color & size names
+                    variants: (product.variants || []).map((variant) => ({
+                        ...variant,
+
+                        color: variant.colorId
+                            ? colorMap.get(String(variant.colorId)) || null
+                            : null,
+
+                        sizes: (variant.sizes || []).map((size) => ({
+                            ...size,
+
+                            size: size.sizeId
+                                ? sizeMap.get(String(size.sizeId)) || null
+                                : null,
+                        })),
+                    })),
+                };
+            }
+
+            return {
+                productId: item.productId,
+                quantity: item.quantity,
+
+                // ✅ Custom name pass-through
+                customName: item.customName || null,
+                displayName:
+                    item.customName ||
+                    product?.name ||
+                    "Product unavailable",
+
+                product: enrichedProduct,
+            };
+        });
+
+        // Pricing
+        const originalValue = bundleProducts.reduce((total, item) => {
+            const sellingPrice =
+                Number(item.product?.price?.sellingPrice) || 0;
+
+            return total + sellingPrice * Number(item.quantity || 1);
+        }, 0);
+
+        const bundleSellingPrice =
+            Number(bundle.price?.sellingPrice) || 0;
+
+        const savings = Math.max(0, originalValue - bundleSellingPrice);
+
+        const discountPercent =
+            originalValue > 0
+                ? Math.round((savings / originalValue) * 100)
+                : 0;
+
+        res.send({
+            success: true,
+
+            bundle: {
+                ...bundle,
+
+                products: bundleProducts,
+
+                // ✅ NEW: Category info
+                productType,
+                category,
+                subCategory,
+
+                pricing: {
+                    originalValue,
+                    sellingPrice: bundleSellingPrice,
+                    savings,
+                    discountPercent,
+                    currency: "BDT",
+                },
+            },
+        });
+    } catch (err) {
+        console.error("Bundle details error:", err);
+
+        res.status(500).send({
+            success: false,
+            message: "Failed to fetch bundle product",
+            error: err.message,
+        });
+    }
+});
+
+app.patch("/bundle-products/:id", async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        if (!ObjectId.isValid(id)) {
+            return res.status(400).json({
+                message: "Invalid bundle ID",
+            });
+        }
+
+        const existingBundle = await bundleProductsCollection.findOne({
+            _id: new ObjectId(id),
+        });
+
+        if (!existingBundle) {
+            return res.status(404).json({
+                message: "Bundle product not found",
+            });
+        }
+
+        const {
+            name,
+            thumbnail,
+            images,
+            description,
+            products,
+            price,
+            isActive,
+            productTypeId,
+            categoryId,
+            subCategoryId,
+        } = req.body;
+
+        // ───── Name ─────
+        if (!name || typeof name !== "string" || !name.trim()) {
+            return res.status(400).json({
+                message: "Bundle name is required",
+            });
+        }
+
+        // ───── Thumbnail ─────
+        if (!thumbnail || typeof thumbnail !== "string") {
+            return res.status(400).json({
+                message: "Bundle thumbnail is required",
+            });
+        }
+
+        // ───── Price ─────
+        const mrp = Number(price?.mrp);
+        const sellingPrice = Number(price?.sellingPrice);
+
+        if (!Number.isFinite(mrp) || mrp < 0) {
+            return res.status(400).json({
+                message: "Invalid MRP",
+            });
+        }
+
+        if (!Number.isFinite(sellingPrice) || sellingPrice <= 0) {
+            return res.status(400).json({
+                message: "Invalid selling price",
+            });
+        }
+
+        if (mrp > 0 && sellingPrice > mrp) {
+            return res.status(400).json({
+                message: "Selling price cannot be greater than MRP",
+            });
+        }
+
+        // ───── Validate products ─────
+        await validateBundleProducts(products);
+
+        // ───── Slug ─────
+        let slug = existingBundle.slug;
+
+        if (existingBundle.name.trim() !== name.trim()) {
+            slug = await generateBundleSlug(name, id);
+        }
+
+        // ───── Discount ─────
+        const discountPercent = calculateDiscountPercent(
+            mrp,
+            sellingPrice
+        );
+
+        // ───── Save products with customName ─────
+        const savedProducts = products.map((item) => ({
+            productId: new ObjectId(item.productId),
+            quantity: Number(item.quantity),
+            customName: item.customName?.trim() || null,
+        }));
+
+        // ───── Update ─────
+        const updateData = {
+            name: name.trim(),
+            slug,
+
+            thumbnail: thumbnail.trim(),
+
+            images: Array.isArray(images)
+                ? images
+                    .map((image) => String(image).trim())
+                    .filter(Boolean)
+                : [],
+
+            description:
+                typeof description === "string"
+                    ? description.trim()
+                    : "",
+
+            ...(productTypeId !== undefined && {
+                productTypeId: productTypeId
+                    ? new ObjectId(productTypeId)
+                    : null,
+            }),
+            ...(categoryId !== undefined && {
+                categoryId: categoryId ? new ObjectId(categoryId) : null,
+            }),
+            ...(subCategoryId !== undefined && {
+                subCategoryId: subCategoryId
+                    ? new ObjectId(subCategoryId)
+                    : null,
+            }),
+
+            products: savedProducts,
+
+            price: {
+                mrp,
+                sellingPrice,
+                discountPercent,
+                currency: "BDT",
+            },
+
+            isActive:
+                typeof isActive === "boolean"
+                    ? isActive
+                    : existingBundle.isActive,
+
+            updatedAt: new Date(),
+        };
+
+        await bundleProductsCollection.updateOne(
+            { _id: new ObjectId(id) },
+            { $set: updateData }
+        );
+
+        const updatedBundle = await bundleProductsCollection.findOne({
+            _id: new ObjectId(id),
+        });
+
+        res.json({
+            message: "Bundle product updated successfully",
+            bundle: updatedBundle,
+        });
+    } catch (error) {
+        console.error("Update bundle error:", error);
+
+        res.status(500).json({
+            message:
+                error.message || "Failed to update bundle product",
+        });
+    }
+});
+
+app.delete("/bundle-products/:id", async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        if (!ObjectId.isValid(id)) {
+            return res.status(400).json({
+                message: "Invalid bundle ID",
+            });
+        }
+
+        const result = await bundleProductsCollection.updateOne(
+            { _id: new ObjectId(id) },
+            {
+                $set: {
+                    isActive: false,
+                    updatedAt: new Date(),
+                },
+            }
+        );
+
+        if (result.matchedCount === 0) {
+            return res.status(404).json({
+                message: "Bundle product not found",
+            });
+        }
+
+        res.json({
+            message: "Bundle product deactivated successfully",
+        });
+    } catch (error) {
+        console.error("Delete bundle error:", error);
+
+        res.status(500).json({
+            message: "Failed to deactivate bundle product",
+        });
+    }
+});
+
+
+///////////////////////////////////////// colors //////////////////////////////////////////////
 
 app.get('/colors', async (req, res) => {
     try {
